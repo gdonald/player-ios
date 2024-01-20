@@ -1,19 +1,26 @@
-//
-//  ContentView.swift
-//  Player
-//
-//  Created by Greg Donald on 1/17/24.
-//
 
 import SwiftUI
 
 struct ContentView: View {
     var body: some View {
         VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            TabView {
+                Mp3sView()
+                    .badge(2223)
+                    .tabItem {
+                        Label("Mp3s", systemImage: "music.note")
+                    }
+                PlaylistsView()
+                    .badge(8)
+                    .tabItem {
+                        Label("Playlists", systemImage: "music.note.list")
+                    }
+                QueueView()
+                    .badge("!")
+                    .tabItem {
+                        Label("Queue", systemImage: "text.insert")
+                    }
+            }
         }
         .padding()
     }

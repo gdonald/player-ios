@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6664911D2B5C1CC500185A29 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6664911C2B5C1CC500185A29 /* AudioPlayerManager.swift */; };
 		66DCBCF22B58B7A300793522 /* PlayerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DCBCF12B58B7A300793522 /* PlayerApp.swift */; };
 		66DCBCF42B58B7A300793522 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DCBCF32B58B7A300793522 /* ContentView.swift */; };
 		66DCBCF62B58B7A400793522 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66DCBCF52B58B7A400793522 /* Assets.xcassets */; };
@@ -14,6 +15,13 @@
 		66DCBD032B58B7A400793522 /* PlayerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DCBD022B58B7A400793522 /* PlayerTests.swift */; };
 		66DCBD0D2B58B7A400793522 /* PlayerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DCBD0C2B58B7A400793522 /* PlayerUITests.swift */; };
 		66DCBD0F2B58B7A400793522 /* PlayerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DCBD0E2B58B7A400793522 /* PlayerUITestsLaunchTests.swift */; };
+		66DCBD1C2B58B96D00793522 /* Mp3sView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DCBD1B2B58B96D00793522 /* Mp3sView.swift */; };
+		66DCBD1E2B58BACB00793522 /* PlaylistsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DCBD1D2B58BACB00793522 /* PlaylistsView.swift */; };
+		66DCBD202B58BB0C00793522 /* QueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DCBD1F2B58BB0C00793522 /* QueueView.swift */; };
+		66F6C2142B5B4DC300DC43FF /* Mp3sManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F6C2132B5B4DC300DC43FF /* Mp3sManager.swift */; };
+		66F6C2162B5B4FA300DC43FF /* Mp3sData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F6C2152B5B4FA300DC43FF /* Mp3sData.swift */; };
+		66F6C2182B5B587100DC43FF /* Mp3View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F6C2172B5B587100DC43FF /* Mp3View.swift */; };
+		66F6C21A2B5BEB8900DC43FF /* Mp3ListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F6C2192B5BEB8900DC43FF /* Mp3ListItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +42,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6664911C2B5C1CC500185A29 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
+		6664911E2B5C300400185A29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		66DCBCEE2B58B7A300793522 /* Player.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Player.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66DCBCF12B58B7A300793522 /* PlayerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerApp.swift; sourceTree = "<group>"; };
 		66DCBCF32B58B7A300793522 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -44,6 +54,13 @@
 		66DCBD082B58B7A400793522 /* PlayerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PlayerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		66DCBD0C2B58B7A400793522 /* PlayerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerUITests.swift; sourceTree = "<group>"; };
 		66DCBD0E2B58B7A400793522 /* PlayerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		66DCBD1B2B58B96D00793522 /* Mp3sView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mp3sView.swift; sourceTree = "<group>"; };
+		66DCBD1D2B58BACB00793522 /* PlaylistsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsView.swift; sourceTree = "<group>"; };
+		66DCBD1F2B58BB0C00793522 /* QueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueView.swift; sourceTree = "<group>"; };
+		66F6C2132B5B4DC300DC43FF /* Mp3sManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mp3sManager.swift; sourceTree = "<group>"; };
+		66F6C2152B5B4FA300DC43FF /* Mp3sData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mp3sData.swift; sourceTree = "<group>"; };
+		66F6C2172B5B587100DC43FF /* Mp3View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mp3View.swift; sourceTree = "<group>"; };
+		66F6C2192B5BEB8900DC43FF /* Mp3ListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mp3ListItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +88,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6664911B2B5C1CA800185A29 /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				6664911C2B5C1CC500185A29 /* AudioPlayerManager.swift */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
 		66DCBCE52B58B7A300793522 = {
 			isa = PBXGroup;
 			children = (
@@ -94,6 +119,12 @@
 		66DCBCF02B58B7A300793522 /* Player */ = {
 			isa = PBXGroup;
 			children = (
+				6664911E2B5C300400185A29 /* Info.plist */,
+				6664911B2B5C1CA800185A29 /* Audio */,
+				66F6C21E2B5C11CA00DC43FF /* Network */,
+				66F6C21D2B5C11B200DC43FF /* Structs */,
+				66F6C21C2B5C116400DC43FF /* Partials */,
+				66F6C21B2B5C113300DC43FF /* Screens */,
 				66DCBCF12B58B7A300793522 /* PlayerApp.swift */,
 				66DCBCF32B58B7A300793522 /* ContentView.swift */,
 				66DCBCF52B58B7A400793522 /* Assets.xcassets */,
@@ -125,6 +156,41 @@
 				66DCBD0E2B58B7A400793522 /* PlayerUITestsLaunchTests.swift */,
 			);
 			path = PlayerUITests;
+			sourceTree = "<group>";
+		};
+		66F6C21B2B5C113300DC43FF /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				66DCBD1D2B58BACB00793522 /* PlaylistsView.swift */,
+				66DCBD1F2B58BB0C00793522 /* QueueView.swift */,
+				66DCBD1B2B58B96D00793522 /* Mp3sView.swift */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		66F6C21C2B5C116400DC43FF /* Partials */ = {
+			isa = PBXGroup;
+			children = (
+				66F6C2172B5B587100DC43FF /* Mp3View.swift */,
+				66F6C2192B5BEB8900DC43FF /* Mp3ListItem.swift */,
+			);
+			path = Partials;
+			sourceTree = "<group>";
+		};
+		66F6C21D2B5C11B200DC43FF /* Structs */ = {
+			isa = PBXGroup;
+			children = (
+				66F6C2152B5B4FA300DC43FF /* Mp3sData.swift */,
+			);
+			path = Structs;
+			sourceTree = "<group>";
+		};
+		66F6C21E2B5C11CA00DC43FF /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				66F6C2132B5B4DC300DC43FF /* Mp3sManager.swift */,
+			);
+			path = Network;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -257,7 +323,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66F6C2142B5B4DC300DC43FF /* Mp3sManager.swift in Sources */,
+				66DCBD1C2B58B96D00793522 /* Mp3sView.swift in Sources */,
 				66DCBCF42B58B7A300793522 /* ContentView.swift in Sources */,
+				66F6C2182B5B587100DC43FF /* Mp3View.swift in Sources */,
+				66F6C21A2B5BEB8900DC43FF /* Mp3ListItem.swift in Sources */,
+				66DCBD1E2B58BACB00793522 /* PlaylistsView.swift in Sources */,
+				66DCBD202B58BB0C00793522 /* QueueView.swift in Sources */,
+				66F6C2162B5B4FA300DC43FF /* Mp3sData.swift in Sources */,
+				6664911D2B5C1CC500185A29 /* AudioPlayerManager.swift in Sources */,
 				66DCBCF22B58B7A300793522 /* PlayerApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -422,8 +496,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Player/Preview Content\"";
+				DEVELOPMENT_TEAM = LAPRLVRUWM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Player/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -450,8 +526,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Player/Preview Content\"";
+				DEVELOPMENT_TEAM = LAPRLVRUWM;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Player/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
