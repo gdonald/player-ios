@@ -38,11 +38,3 @@ struct Mp3View: View {
         }
     }
 }
-
-// #Preview {
-//    Mp3View(mp3: Mp3(id: 1,
-//                     track: 0,
-//                     title: "Some Mp3",
-//                     album_name: "Album",
-//                     artist_name: "Artist"))
-// }

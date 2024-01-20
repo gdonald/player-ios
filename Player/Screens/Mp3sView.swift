@@ -10,14 +10,10 @@ struct Mp3sView: View {
                 NavigationLink(destination: Mp3View(mp3: mp3)) {
                     Mp3ListItem(mp3: mp3)
                 }
+            }.padding(0)
+        }.padding(0)
+            .onAppear {
+                self.mp3sManager.fetch()
             }
-            .navigationBarTitle("Mp3s")
-        }.onAppear {
-            self.mp3sManager.fetch()
-        }
     }
-}
-
-#Preview {
-    Mp3sView()
 }

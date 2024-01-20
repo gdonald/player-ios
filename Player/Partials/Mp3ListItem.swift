@@ -17,12 +17,3 @@ struct Mp3ListItem: View {
         }.padding(5)
     }
 }
-
-#Preview {
-    Mp3ListItem(mp3: Mp3(id: 1,
-                         track: 0,
-                         length: 100,
-                         title: "Some Mp3",
-                         album_name: "Album",
-                         artist_name: "Artist"))
-}

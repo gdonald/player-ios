@@ -1,9 +1,3 @@
-//
-//  PlayerApp.swift
-//  Player
-//
-//  Created by Greg Donald on 1/17/24.
-//
 
 import SwiftUI
 
@@ -11,8 +5,7 @@ import SwiftUI
 struct PlayerApp: App {
     var body: some Scene {
         WindowGroup {
-//            ContentView()
-            Mp3sView()
+            MainView()
         }
     }
 }

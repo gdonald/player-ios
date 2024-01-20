@@ -1,9 +1,3 @@
-//
-//  Mp3sData.swift
-//  Player
-//
-//  Created by Greg Donald on 1/19/24.
-//
 
 import Foundation
 

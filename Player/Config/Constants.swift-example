@@ -1,0 +1,4 @@
+
+enum Constants {
+    static let baseUrl = "http://example.com/api"
+}

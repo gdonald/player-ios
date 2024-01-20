@@ -1,3 +1,4 @@
+
 import AVFoundation
 import Combine
 import SwiftUI
@@ -13,7 +14,7 @@ class AudioPlayerManager: NSObject, ObservableObject {
 
     init(mp3: Mp3) {
         super.init()
-        playerItem = AVPlayerItem(url: URL(string: "http://10.0.0.33:3000/api/mp3s/\(mp3.id)/play")!)
+        playerItem = AVPlayerItem(url: URL(string: "\(Constants.baseUrl)/mp3s/\(mp3.id)/play")!)
         audioPlayer = AVPlayer(playerItem: playerItem)
         addPeriodicTimeObserver()
         addObserver()
@@ -55,12 +56,6 @@ class AudioPlayerManager: NSObject, ObservableObject {
     }
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
-//        if keyPath == "status", let item = object as? AVPlayerItem, item.status == .readyToPlay {
-//            let durationTime = item.duration
-//
-//            if durationTime.isIndefinite == false {
-//                duration = durationTime.seconds
-//            }
-//        }
+        //
     }
 }
