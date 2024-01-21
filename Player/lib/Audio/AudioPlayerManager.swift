@@ -9,11 +9,18 @@ class AudioPlayerManager: NSObject, ObservableObject {
     private var playerItem: AVPlayerItem?
 
     @Published var isPlaying = false
+    @Published var ended = false
     @Published var currentTime: Double = 0
     @Published var duration: Double = 0
 
-    init(mp3: Mp3?) {
-        super.init()
+    deinit {
+        if let timeObserverToken = timeObserverToken {
+            audioPlayer?.removeTimeObserver(timeObserverToken)
+        }
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    func newMp3(mp3: Mp3?) {
         if mp3 == nil {
             return
         }
@@ -24,18 +31,12 @@ class AudioPlayerManager: NSObject, ObservableObject {
         addObserver()
     }
 
-    deinit {
-        if let timeObserverToken = timeObserverToken {
-            audioPlayer?.removeTimeObserver(timeObserverToken)
-        }
-        NotificationCenter.default.removeObserver(self)
-    }
-
     func playPause() {
         if isPlaying {
             audioPlayer?.pause()
         } else {
             audioPlayer?.play()
+            ended = false
         }
         isPlaying.toggle()
     }
@@ -52,14 +53,29 @@ class AudioPlayerManager: NSObject, ObservableObject {
     }
 
     private func addObserver() {
-        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: playerItem, queue: .main) { [weak self] _ in
+        NotificationCenter.default.addObserver(
+            forName: .AVPlayerItemDidPlayToEndTime,
+            object: playerItem, queue: .main
+        ) { [weak self] _ in
             self?.isPlaying = false
             self?.seek(to: 0)
         }
-        playerItem?.addObserver(self, forKeyPath: "duration", options: [.new, .initial], context: nil)
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(playerItemDidReachEnd),
+            name: .AVPlayerItemDidPlayToEndTime,
+            object: playerItem
+        )
+    }
+
+    @objc func playerItemDidReachEnd(notification: Notification) {
+        DispatchQueue.main.async {
+            self.ended = true
+        }
     }
 
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
-        //
+//        print("keyPath:", keyPath)
     }
 }

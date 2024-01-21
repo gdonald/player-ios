@@ -7,22 +7,22 @@ struct MainView: View {
     var body: some View {
         VStack {
             TabView {
-                Mp3sView(mp3s: networkManager.mp3s)
-                    .badge(networkManager.mainCounts.mp3s_count)
+                Mp3sView(networkManager: networkManager)
+                    .badge(networkManager.mp3s.count)
                     .tabItem {
                         Label("Mp3s", systemImage: "music.note")
                     }
                     .padding(0)
 
-                PlaylistsView(playlists: networkManager.playlists)
-                    .badge(networkManager.mainCounts.playlists_count)
+                PlaylistsView(networkManager: networkManager)
+                    .badge(networkManager.playlists.count)
                     .tabItem {
                         Label("Playlists", systemImage: "music.note.list")
                     }
                     .padding(0)
 
-                QueuedMp3sView(queuedMp3s: networkManager.queuedMp3s)
-                    .badge(networkManager.mainCounts.queued_mp3s_count)
+                QueuedMp3sView(networkManager: networkManager)
+                    .badge(networkManager.queuedMp3s.count)
                     .tabItem {
                         Label("Queue", systemImage: "text.insert")
                     }
