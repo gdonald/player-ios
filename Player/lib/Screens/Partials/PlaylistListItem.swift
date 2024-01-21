@@ -1,16 +1,16 @@
 
 import SwiftUI
 
-struct Mp3ListItem: View {
-    var mp3: Mp3
+struct PlaylistListItem: View {
+    var playlist: Playlist
 
     var body: some View {
         VStack(spacing: 0) {
-            Text(mp3.title)
+            Text(playlist.name)
                 .font(.system(size: 15))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                 .padding(2)
-            Text(mp3.artist_name)
+            Text(String(playlist.mp3s_count))
                 .font(.system(size: 11))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                 .padding(3)
