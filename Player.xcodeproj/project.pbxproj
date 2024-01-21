@@ -15,6 +15,9 @@
 		66B6F44C2B5C58220017C5F5 /* PlaylistListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B6F44B2B5C58220017C5F5 /* PlaylistListItem.swift */; };
 		66B6F4502B5C71620017C5F5 /* MainCountsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B6F44F2B5C71620017C5F5 /* MainCountsData.swift */; };
 		66B6F4522B5C980C0017C5F5 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B6F4512B5C980C0017C5F5 /* NetworkManager.swift */; };
+		66B6F4542B5CAFD70017C5F5 /* QueuedMp3ListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B6F4532B5CAFD70017C5F5 /* QueuedMp3ListItem.swift */; };
+		66B6F4562B5CB0540017C5F5 /* QueuedMp3sData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B6F4552B5CB0540017C5F5 /* QueuedMp3sData.swift */; };
+		66B6F4582B5D6D6A0017C5F5 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B6F4572B5D6D6A0017C5F5 /* Utils.swift */; };
 		66DCBCF22B58B7A300793522 /* PlayerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DCBCF12B58B7A300793522 /* PlayerApp.swift */; };
 		66DCBCF42B58B7A300793522 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DCBCF32B58B7A300793522 /* MainView.swift */; };
 		66DCBCF62B58B7A400793522 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 66DCBCF52B58B7A400793522 /* Assets.xcassets */; };
@@ -24,7 +27,7 @@
 		66DCBD0F2B58B7A400793522 /* PlayerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DCBD0E2B58B7A400793522 /* PlayerUITestsLaunchTests.swift */; };
 		66DCBD1C2B58B96D00793522 /* Mp3sView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DCBD1B2B58B96D00793522 /* Mp3sView.swift */; };
 		66DCBD1E2B58BACB00793522 /* PlaylistsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DCBD1D2B58BACB00793522 /* PlaylistsView.swift */; };
-		66DCBD202B58BB0C00793522 /* QueueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DCBD1F2B58BB0C00793522 /* QueueView.swift */; };
+		66DCBD202B58BB0C00793522 /* QueuedMp3sView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66DCBD1F2B58BB0C00793522 /* QueuedMp3sView.swift */; };
 		66F6C2162B5B4FA300DC43FF /* Mp3sData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F6C2152B5B4FA300DC43FF /* Mp3sData.swift */; };
 		66F6C2182B5B587100DC43FF /* Mp3View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F6C2172B5B587100DC43FF /* Mp3View.swift */; };
 		66F6C21A2B5BEB8900DC43FF /* Mp3ListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66F6C2192B5BEB8900DC43FF /* Mp3ListItem.swift */; };
@@ -57,6 +60,9 @@
 		66B6F44B2B5C58220017C5F5 /* PlaylistListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistListItem.swift; sourceTree = "<group>"; };
 		66B6F44F2B5C71620017C5F5 /* MainCountsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCountsData.swift; sourceTree = "<group>"; };
 		66B6F4512B5C980C0017C5F5 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		66B6F4532B5CAFD70017C5F5 /* QueuedMp3ListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueuedMp3ListItem.swift; sourceTree = "<group>"; };
+		66B6F4552B5CB0540017C5F5 /* QueuedMp3sData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueuedMp3sData.swift; sourceTree = "<group>"; };
+		66B6F4572B5D6D6A0017C5F5 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		66DCBCEE2B58B7A300793522 /* Player.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Player.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		66DCBCF12B58B7A300793522 /* PlayerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerApp.swift; sourceTree = "<group>"; };
 		66DCBCF32B58B7A300793522 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -69,7 +75,7 @@
 		66DCBD0E2B58B7A400793522 /* PlayerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		66DCBD1B2B58B96D00793522 /* Mp3sView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mp3sView.swift; sourceTree = "<group>"; };
 		66DCBD1D2B58BACB00793522 /* PlaylistsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsView.swift; sourceTree = "<group>"; };
-		66DCBD1F2B58BB0C00793522 /* QueueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueView.swift; sourceTree = "<group>"; };
+		66DCBD1F2B58BB0C00793522 /* QueuedMp3sView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueuedMp3sView.swift; sourceTree = "<group>"; };
 		66F6C2152B5B4FA300DC43FF /* Mp3sData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mp3sData.swift; sourceTree = "<group>"; };
 		66F6C2172B5B587100DC43FF /* Mp3View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mp3View.swift; sourceTree = "<group>"; };
 		66F6C2192B5BEB8900DC43FF /* Mp3ListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mp3ListItem.swift; sourceTree = "<group>"; };
@@ -104,6 +110,7 @@
 			isa = PBXGroup;
 			children = (
 				6664911C2B5C1CC500185A29 /* AudioPlayerManager.swift */,
+				66B6F4572B5D6D6A0017C5F5 /* Utils.swift */,
 			);
 			path = Audio;
 			sourceTree = "<group>";
@@ -194,7 +201,7 @@
 				66F6C2172B5B587100DC43FF /* Mp3View.swift */,
 				66DCBD1D2B58BACB00793522 /* PlaylistsView.swift */,
 				66B6F4492B5C57DE0017C5F5 /* PlaylistView.swift */,
-				66DCBD1F2B58BB0C00793522 /* QueueView.swift */,
+				66DCBD1F2B58BB0C00793522 /* QueuedMp3sView.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -204,6 +211,7 @@
 			children = (
 				66F6C2192B5BEB8900DC43FF /* Mp3ListItem.swift */,
 				66B6F44B2B5C58220017C5F5 /* PlaylistListItem.swift */,
+				66B6F4532B5CAFD70017C5F5 /* QueuedMp3ListItem.swift */,
 			);
 			path = Partials;
 			sourceTree = "<group>";
@@ -215,6 +223,7 @@
 				66F6C2152B5B4FA300DC43FF /* Mp3sData.swift */,
 				66B6F4462B5C56170017C5F5 /* PlaylistsData.swift */,
 				66B6F44F2B5C71620017C5F5 /* MainCountsData.swift */,
+				66B6F4552B5CB0540017C5F5 /* QueuedMp3sData.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -354,16 +363,19 @@
 				66DCBD1C2B58B96D00793522 /* Mp3sView.swift in Sources */,
 				66B6F4502B5C71620017C5F5 /* MainCountsData.swift in Sources */,
 				66DCBCF42B58B7A300793522 /* MainView.swift in Sources */,
+				66B6F4562B5CB0540017C5F5 /* QueuedMp3sData.swift in Sources */,
 				66F6C2182B5B587100DC43FF /* Mp3View.swift in Sources */,
 				66F6C21A2B5BEB8900DC43FF /* Mp3ListItem.swift in Sources */,
 				66DCBD1E2B58BACB00793522 /* PlaylistsView.swift in Sources */,
-				66DCBD202B58BB0C00793522 /* QueueView.swift in Sources */,
+				66DCBD202B58BB0C00793522 /* QueuedMp3sView.swift in Sources */,
+				66B6F4542B5CAFD70017C5F5 /* QueuedMp3ListItem.swift in Sources */,
 				66B6F44A2B5C57DE0017C5F5 /* PlaylistView.swift in Sources */,
 				666491232B5C505000185A29 /* Constants.swift-example in Sources */,
 				66F6C2162B5B4FA300DC43FF /* Mp3sData.swift in Sources */,
 				66B6F4472B5C56170017C5F5 /* PlaylistsData.swift in Sources */,
 				6664911D2B5C1CC500185A29 /* AudioPlayerManager.swift in Sources */,
 				66B6F44C2B5C58220017C5F5 /* PlaylistListItem.swift in Sources */,
+				66B6F4582B5D6D6A0017C5F5 /* Utils.swift in Sources */,
 				66DCBCF22B58B7A300793522 /* PlayerApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

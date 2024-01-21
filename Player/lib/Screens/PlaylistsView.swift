@@ -5,14 +5,15 @@ struct PlaylistsView: View {
     let playlists: [Playlist]
 
     var body: some View {
-        VStack {
-            NavigationView {
-                List(playlists) { playlist in
-                    NavigationLink(destination: PlaylistView(playlist: playlist)) {
-                        PlaylistListItem(playlist: playlist)
-                    }
-                }.padding(0)
-            }.padding(0)
+        NavigationView {
+            List(playlists) { playlist in
+                NavigationLink(destination: PlaylistView(playlist: playlist)) {
+                    PlaylistListItem(playlist: playlist)
+                }
+                .listRowInsets(EdgeInsets())
+            }
+            .listStyle(PlainListStyle())
         }
+        .padding(0)
     }
 }

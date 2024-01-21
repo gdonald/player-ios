@@ -1,19 +1,23 @@
 
 import SwiftUI
 
-struct PlaylistListItem: View {
-    var playlist: Playlist
+struct QueuedMp3ListItem: View {
+    var queuedMp3: QueuedMp3
 
     var body: some View {
         VStack(spacing: 0) {
-            Text(playlist.name)
+            Text(queuedMp3.title)
                 .font(.system(size: 15))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                 .padding(2)
-            Text(String(playlist.mp3s_count))
+            Text(String(queuedMp3.position))
                 .font(.system(size: 11))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                 .padding(3)
         }.padding(0)
     }
 }
+
+// #Preview {
+//    QueuedMp3ListItem()
+// }

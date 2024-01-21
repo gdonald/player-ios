@@ -21,7 +21,7 @@ struct MainView: View {
                     }
                     .padding(0)
 
-                QueueView()
+                QueuedMp3sView(queuedMp3s: networkManager.queuedMp3s)
                     .badge(networkManager.mainCounts.queued_mp3s_count)
                     .tabItem {
                         Label("Queue", systemImage: "text.insert")
