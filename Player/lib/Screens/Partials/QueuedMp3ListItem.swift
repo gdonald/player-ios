@@ -6,7 +6,7 @@ struct QueuedMp3ListItem: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Text(queuedMp3.title)
+            Text(queuedMp3.mp3.title)
                 .font(.system(size: 15))
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
                 .padding(2)

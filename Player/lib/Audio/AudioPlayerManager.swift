@@ -12,9 +12,13 @@ class AudioPlayerManager: NSObject, ObservableObject {
     @Published var currentTime: Double = 0
     @Published var duration: Double = 0
 
-    init(mp3: Mp3) {
+    init(mp3: Mp3?) {
         super.init()
-        playerItem = AVPlayerItem(url: URL(string: "\(Constants.baseUrl)/mp3s/\(mp3.id)/play")!)
+        if mp3 == nil {
+            return
+        }
+
+        playerItem = AVPlayerItem(url: URL(string: "\(Constants.baseUrl)/mp3s/\(mp3?.id ?? 0)/play")!)
         audioPlayer = AVPlayer(playerItem: playerItem)
         addPeriodicTimeObserver()
         addObserver()

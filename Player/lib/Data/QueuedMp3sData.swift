@@ -7,11 +7,6 @@ struct QueuedMp3s: Decodable {
 
 struct QueuedMp3: Identifiable, Decodable {
     let id: Int
-    let mp3_id: Int
     let position: Int
-    let length: Int
-    let track: Int
-    let title: String
-    let artist_name: String
-    let album_name: String
+    let mp3: Mp3
 }

@@ -10,18 +10,11 @@ struct QueuedMp3sView: View {
     init(queuedMp3s: [QueuedMp3]) {
         self.queuedMp3s = queuedMp3s
 
+        var mp3: Mp3?
         if !queuedMp3s.isEmpty {
             self.currentMp3 = queuedMp3s.first
+            mp3 = currentMp3?.mp3
         }
-
-        let mp3 = Mp3(
-            id: currentMp3?.mp3_id ?? 0,
-            track: currentMp3?.track ?? 0,
-            length: currentMp3?.length ?? 0,
-            title: currentMp3?.title ?? "",
-            album_name: currentMp3?.album_name ?? "",
-            artist_name: currentMp3?.artist_name ?? ""
-        )
         _playerManager = StateObject(wrappedValue: AudioPlayerManager(mp3: mp3))
     }
 
@@ -32,22 +25,24 @@ struct QueuedMp3sView: View {
                     .listRowInsets(EdgeInsets())
             }
             .listStyle(PlainListStyle())
-            VStack {
-                Text(self.playerManager.isPlaying ? "Playing" : "Paused")
-                Button(action: {
-                    self.playerManager.playPause()
-                }) {
-                    Image(systemName: self.playerManager.isPlaying ? "pause.circle" : "play.circle")
-                        .resizable()
-                        .frame(width: 50, height: 50)
-                }
-                Slider(value: Binding(
-                    get: { self.playerManager.currentTime },
-                    set: { newTime in
-                        self.playerManager.seek(to: newTime)
+            if currentMp3 != nil {
+                VStack {
+                    Text(self.playerManager.isPlaying ? "Playing" : "Paused")
+                    Button(action: {
+                        self.playerManager.playPause()
+                    }) {
+                        Image(systemName: self.playerManager.isPlaying ? "pause.circle" : "play.circle")
+                            .resizable()
+                            .frame(width: 50, height: 50)
                     }
-                ), in: 0 ... Double(currentMp3?.length ?? 0))
-                Text("\(formatTime(Int(self.playerManager.currentTime))) / \(formatTime(currentMp3?.length ?? 0))")
+                    Slider(value: Binding(
+                        get: { self.playerManager.currentTime },
+                        set: { newTime in
+                            self.playerManager.seek(to: newTime)
+                        }
+                    ), in: 0 ... Double(currentMp3?.mp3.length ?? 0))
+                    Text("\(formatTime(Int(self.playerManager.currentTime))) / \(formatTime(currentMp3?.mp3.length ?? 0))")
+                }
             }
         }
         .padding(0)
