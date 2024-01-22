@@ -3,17 +3,27 @@ import SwiftUI
 
 struct PlaylistsView: View {
     @ObservedObject var networkManager: NetworkManager
+    @State private var searchText = ""
+
+    var filteredItems: [Playlist] {
+        if searchText.isEmpty {
+            return networkManager.playlists
+        } else {
+            return networkManager.playlists.filter {
+                $0.name.localizedCaseInsensitiveContains(searchText)
+            }
+        }
+    }
 
     var body: some View {
         NavigationView {
-            List(networkManager.playlists) { playlist in
-                NavigationLink(destination: PlaylistView(playlist: playlist)) {
+            VStack {
+                List(filteredItems) { playlist in
                     PlaylistListItem(playlist: playlist)
+                        .listRowInsets(EdgeInsets())
                 }
-                .listRowInsets(EdgeInsets())
+                .searchable(text: $searchText)
             }
-            .listStyle(PlainListStyle())
         }
-        .padding(0)
     }
 }

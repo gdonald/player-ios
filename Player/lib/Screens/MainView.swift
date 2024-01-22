@@ -4,6 +4,10 @@ import SwiftUI
 struct MainView: View {
     @ObservedObject var networkManager = NetworkManager()
 
+    init() {
+        UITabBarItem.appearance().badgeColor = UIColor.blue
+    }
+
     var body: some View {
         VStack {
             TabView {
@@ -12,25 +16,21 @@ struct MainView: View {
                     .tabItem {
                         Label("Mp3s", systemImage: "music.note")
                     }
-                    .padding(0)
 
                 PlaylistsView(networkManager: networkManager)
                     .badge(networkManager.playlists.count)
                     .tabItem {
                         Label("Playlists", systemImage: "music.note.list")
                     }
-                    .padding(0)
 
                 QueuedMp3sView(networkManager: networkManager)
                     .badge(networkManager.queuedMp3s.count)
                     .tabItem {
                         Label("Queue", systemImage: "text.insert")
                     }
-                    .padding(0)
             }
-            .padding(0)
         }
-        .padding(0)
+        .accentColor(.white)
         .task {
             self.networkManager.fetch()
         }
