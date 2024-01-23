@@ -6,6 +6,7 @@ struct PlayerApp: App {
     var body: some Scene {
         WindowGroup {
             MainView()
+                .environmentObject(UserAuth())
         }
     }
 }

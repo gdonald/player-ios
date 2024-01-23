@@ -10,6 +10,10 @@
 		6664911D2B5C1CC500185A29 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6664911C2B5C1CC500185A29 /* AudioPlayerManager.swift */; };
 		666491212B5C4F4900185A29 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 666491202B5C4F4900185A29 /* Constants.swift */; };
 		666491232B5C505000185A29 /* Constants.swift-example in Sources */ = {isa = PBXBuildFile; fileRef = 666491222B5C505000185A29 /* Constants.swift-example */; };
+		6674E3282B5F2EE600C344BE /* LogoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6674E3272B5F2EE600C344BE /* LogoutView.swift */; };
+		669481692B5EF64700A32421 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669481682B5EF64700A32421 /* LoginView.swift */; };
+		6694816B2B5EF8FC00A32421 /* UserAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6694816A2B5EF8FC00A32421 /* UserAuth.swift */; };
+		6694816D2B5F209100A32421 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6694816C2B5F209100A32421 /* KeychainHelper.swift */; };
 		66B6F4472B5C56170017C5F5 /* PlaylistsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B6F4462B5C56170017C5F5 /* PlaylistsData.swift */; };
 		66B6F44A2B5C57DE0017C5F5 /* PlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B6F4492B5C57DE0017C5F5 /* PlaylistView.swift */; };
 		66B6F44C2B5C58220017C5F5 /* PlaylistListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B6F44B2B5C58220017C5F5 /* PlaylistListItem.swift */; };
@@ -51,6 +55,10 @@
 		6664911E2B5C300400185A29 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		666491202B5C4F4900185A29 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		666491222B5C505000185A29 /* Constants.swift-example */ = {isa = PBXFileReference; lastKnownFileType = text; path = "Constants.swift-example"; sourceTree = "<group>"; };
+		6674E3272B5F2EE600C344BE /* LogoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutView.swift; sourceTree = "<group>"; };
+		669481682B5EF64700A32421 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		6694816A2B5EF8FC00A32421 /* UserAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAuth.swift; sourceTree = "<group>"; };
+		6694816C2B5F209100A32421 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		66B6F4462B5C56170017C5F5 /* PlaylistsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsData.swift; sourceTree = "<group>"; };
 		66B6F4492B5C57DE0017C5F5 /* PlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistView.swift; sourceTree = "<group>"; };
 		66B6F44B2B5C58220017C5F5 /* PlaylistListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistListItem.swift; sourceTree = "<group>"; };
@@ -174,6 +182,8 @@
 				66DCBD1D2B58BACB00793522 /* PlaylistsView.swift */,
 				66B6F4492B5C57DE0017C5F5 /* PlaylistView.swift */,
 				66DCBD1F2B58BB0C00793522 /* QueuedMp3sView.swift */,
+				669481682B5EF64700A32421 /* LoginView.swift */,
+				6674E3272B5F2EE600C344BE /* LogoutView.swift */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -196,6 +206,8 @@
 				66B6F4462B5C56170017C5F5 /* PlaylistsData.swift */,
 				66B6F44F2B5C71620017C5F5 /* MainCountsData.swift */,
 				66B6F4552B5CB0540017C5F5 /* QueuedMp3sData.swift */,
+				6694816A2B5EF8FC00A32421 /* UserAuth.swift */,
+				6694816C2B5F209100A32421 /* KeychainHelper.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -334,19 +346,23 @@
 				666491212B5C4F4900185A29 /* Constants.swift in Sources */,
 				66DCBD1C2B58B96D00793522 /* Mp3sView.swift in Sources */,
 				66B6F4502B5C71620017C5F5 /* MainCountsData.swift in Sources */,
+				6694816D2B5F209100A32421 /* KeychainHelper.swift in Sources */,
 				66DCBCF42B58B7A300793522 /* MainView.swift in Sources */,
 				66B6F4562B5CB0540017C5F5 /* QueuedMp3sData.swift in Sources */,
 				66F6C21A2B5BEB8900DC43FF /* Mp3ListItem.swift in Sources */,
 				66DCBD1E2B58BACB00793522 /* PlaylistsView.swift in Sources */,
 				66DCBD202B58BB0C00793522 /* QueuedMp3sView.swift in Sources */,
 				66B6F4542B5CAFD70017C5F5 /* QueuedMp3ListItem.swift in Sources */,
+				6694816B2B5EF8FC00A32421 /* UserAuth.swift in Sources */,
 				66B6F44A2B5C57DE0017C5F5 /* PlaylistView.swift in Sources */,
 				666491232B5C505000185A29 /* Constants.swift-example in Sources */,
 				66F6C2162B5B4FA300DC43FF /* Mp3sData.swift in Sources */,
 				66B6F4472B5C56170017C5F5 /* PlaylistsData.swift in Sources */,
 				6664911D2B5C1CC500185A29 /* AudioPlayerManager.swift in Sources */,
 				66B6F44C2B5C58220017C5F5 /* PlaylistListItem.swift in Sources */,
+				669481692B5EF64700A32421 /* LoginView.swift in Sources */,
 				66B6F4582B5D6D6A0017C5F5 /* Utils.swift in Sources */,
+				6674E3282B5F2EE600C344BE /* LogoutView.swift in Sources */,
 				66DCBCF22B58B7A300793522 /* PlayerApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
