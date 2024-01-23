@@ -14,21 +14,35 @@ class NetworkManager: ObservableObject {
         fetchQueuedMp3s()
     }
 
-    func fetchMp3s() {
+    func fetchMp3s(retryCount: Int = 0) {
         if let url = URL(string: "\(Constants.baseUrl)/mp3s.json") {
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) { data, _, error in
-                if error == nil {
-                    let decoder = JSONDecoder()
-                    if let safeData = data {
-                        do {
-                            let results = try decoder.decode(Mp3s.self, from: safeData)
-                            DispatchQueue.main.async {
-                                self.mp3s = results.mp3s
-                            }
-                        } catch {
-                            print(error)
+                if let error = error {
+                    print("Request failed: \(error), retryCount: \(retryCount)")
+
+                    if retryCount < Constants.maxRetryAttempts {
+                        let delay = Constants.initialDelayInSeconds * Int(pow(2.0, Double(retryCount)))
+                        DispatchQueue.main.asyncAfter(deadline: .now() + Double(delay)) {
+                            self.fetchMp3s(retryCount: retryCount + 1)
                         }
+                    } else {
+                        print("Max retries reached. Handling the failure.")
+                    }
+                    return
+                }
+
+                print("Request successful")
+
+                let decoder = JSONDecoder()
+                if let safeData = data {
+                    do {
+                        let results = try decoder.decode(Mp3s.self, from: safeData)
+                        DispatchQueue.main.async {
+                            self.mp3s = results.mp3s
+                        }
+                    } catch {
+                        print(error)
                     }
                 }
             }
@@ -36,22 +50,36 @@ class NetworkManager: ObservableObject {
         }
     }
 
-    func fetchQueuedMp3s() {
+    func fetchQueuedMp3s(retryCount: Int = 0) {
         if let url = URL(string: "\(Constants.baseUrl)/queued_mp3s.json") {
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) { data, _, error in
-                if error == nil {
-                    let decoder = JSONDecoder()
-                    if let safeData = data {
-                        do {
-                            let results = try decoder.decode(QueuedMp3s.self, from: safeData)
-                            DispatchQueue.main.async {
-                                self.queuedMp3s = results.queued_mp3s
-                                self.currentMp3 = self.queuedMp3s.first
-                            }
-                        } catch {
-                            print(error)
+                if let error = error {
+                    print("Request failed: \(error), retryCount: \(retryCount)")
+
+                    if retryCount < Constants.maxRetryAttempts {
+                        let delay = Constants.initialDelayInSeconds * Int(pow(2.0, Double(retryCount)))
+                        DispatchQueue.main.asyncAfter(deadline: .now() + Double(delay)) {
+                            self.fetchQueuedMp3s(retryCount: retryCount + 1)
                         }
+                    } else {
+                        print("Max retries reached. Handling the failure.")
+                    }
+                    return
+                }
+
+                print("Request successful")
+
+                let decoder = JSONDecoder()
+                if let safeData = data {
+                    do {
+                        let results = try decoder.decode(QueuedMp3s.self, from: safeData)
+                        DispatchQueue.main.async {
+                            self.queuedMp3s = results.queued_mp3s
+                            self.currentMp3 = self.queuedMp3s.first
+                        }
+                    } catch {
+                        print(error)
                     }
                 }
             }
@@ -59,21 +87,35 @@ class NetworkManager: ObservableObject {
         }
     }
 
-    func fetchPlaylists() {
+    func fetchPlaylists(retryCount: Int = 0) {
         if let url = URL(string: "\(Constants.baseUrl)/playlists.json") {
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) { data, _, error in
-                if error == nil {
-                    let decoder = JSONDecoder()
-                    if let safeData = data {
-                        do {
-                            let results = try decoder.decode(Playlists.self, from: safeData)
-                            DispatchQueue.main.async {
-                                self.playlists = results.playlists
-                            }
-                        } catch {
-                            print(error)
+                if let error = error {
+                    print("Request failed: \(error), retryCount: \(retryCount)")
+
+                    if retryCount < Constants.maxRetryAttempts {
+                        let delay = Constants.initialDelayInSeconds * Int(pow(2.0, Double(retryCount)))
+                        DispatchQueue.main.asyncAfter(deadline: .now() + Double(delay)) {
+                            self.fetchPlaylists(retryCount: retryCount + 1)
                         }
+                    } else {
+                        print("Max retries reached. Handling the failure.")
+                    }
+                    return
+                }
+
+                print("Request successful")
+
+                let decoder = JSONDecoder()
+                if let safeData = data {
+                    do {
+                        let results = try decoder.decode(Playlists.self, from: safeData)
+                        DispatchQueue.main.async {
+                            self.playlists = results.playlists
+                        }
+                    } catch {
+                        print(error)
                     }
                 }
             }
@@ -81,7 +123,7 @@ class NetworkManager: ObservableObject {
         }
     }
 
-    func nextQueuedMp3() {
+    func nextQueuedMp3(retryCount: Int = 0) {
         if currentMp3 == nil {
             return
         }
@@ -93,7 +135,16 @@ class NetworkManager: ObservableObject {
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: request) { data, response, error in
                 if let error = error {
-                    print("Error making DELETE request: \(error)")
+                    print("Request failed: \(error), retryCount: \(retryCount)")
+
+                    if retryCount < Constants.maxRetryAttempts {
+                        let delay = Constants.initialDelayInSeconds * Int(pow(2.0, Double(retryCount)))
+                        DispatchQueue.main.asyncAfter(deadline: .now() + Double(delay)) {
+                            self.nextQueuedMp3(retryCount: retryCount + 1)
+                        }
+                    } else {
+                        print("Max retries reached. Handling the failure.")
+                    }
                     return
                 }
 

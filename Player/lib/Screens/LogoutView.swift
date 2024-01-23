@@ -5,19 +5,34 @@ struct LogoutView: View {
     @EnvironmentObject var userAuth: UserAuth
 
     func logoutAction() {
+        DispatchQueue.main.async {
+            self.userAuth.isAuthenticated = false
+        }
+
         if let data = "".data(using: .utf8) {
             let status = KeychainHelper.save(key: "sessionCookie", data: data)
             if status != 0 {
                 print("Failed to clear session cookie")
             }
         }
-
-        userAuth.isAuthenticated = false
     }
 
     var body: some View {
-        Text("Logging out...")
-            .onAppear(perform: logoutAction)
+        VStack {
+            Text("Are you sure?").padding().font(.title)
+            Button(action: logoutAction) {
+                Text("Logout")
+                    .foregroundColor(.black)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+            }
+            .background(RoundedRectangle(cornerRadius: 7)
+                .fill(Color.gray))
+            .overlay(
+                RoundedRectangle(cornerRadius: 7)
+                    .stroke(Color.gray, lineWidth: 1)
+            )
+        }
     }
 }
 

@@ -6,7 +6,7 @@ struct LoginView: View {
     @State private var username: String = "gd"
     @State private var password: String = "changeme"
 
-    func authenticateUser(username: String, password: String) {
+    func authenticateUser(username: String, password: String, retryCount: Int = 0) {
         guard let url = URL(string: "\(Constants.baseUrl)/sessions") else { return }
 
         var request = URLRequest(url: url)
@@ -20,16 +20,29 @@ struct LoginView: View {
 
         request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
 
-        URLSession.shared.dataTask(with: request) { _, response, error in
+        let task = URLSession.shared.dataTask(with: request) { _, response, error in
             if let error = error {
-                print("Error: \(error)")
+                print("Request failed: \(error), retryCount: \(retryCount)")
+
+                if retryCount < Constants.maxRetryAttempts {
+                    let delay = Constants.initialDelayInSeconds * Int(pow(2.0, Double(retryCount)))
+                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(delay)) {
+                        self.authenticateUser(
+                            username: username,
+                            password: password,
+                            retryCount: retryCount + 1
+                        )
+                    }
+                } else {
+                    print("Max retries reached. Handling the failure.")
+                }
                 return
             }
 
             if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode == 200 {
                     DispatchQueue.main.async {
-                        userAuth.isAuthenticated = true
+                        self.userAuth.isAuthenticated = true
                     }
                 } else {
                     print("Login failed, HTTP Status Code: \(httpResponse.statusCode)")
@@ -51,8 +64,8 @@ struct LoginView: View {
                     }
                 }
             }
-
-        }.resume()
+        }
+        task.resume()
     }
 
     var body: some View {

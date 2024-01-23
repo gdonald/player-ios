@@ -12,7 +12,7 @@ struct MainView: View {
 
     var body: some View {
         Group {
-            if userAuth.isAuthenticated {
+            if self.userAuth.isAuthenticated {
                 VStack {
                     TabView(selection: $selectedTab) {
                         Mp3sView(networkManager: networkManager)
@@ -37,7 +37,9 @@ struct MainView: View {
                             .tabItem {
                                 Label("Logout", systemImage: "arrow.right.square")
                             }
-                            .tag(4)
+
+                    }.onAppear {
+                        selectedTab = 0
                     }
                 }
                 .accentColor(.white)
