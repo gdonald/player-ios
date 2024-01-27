@@ -15,10 +15,10 @@ struct MainView: View {
             if self.userAuth.isAuthenticated {
                 VStack {
                     TabView(selection: $selectedTab) {
-                        Mp3sView(networkManager: networkManager)
-                            .badge(networkManager.mp3s.count)
+                        QueuedMp3sView(networkManager: networkManager)
+                            .badge(networkManager.queuedMp3s.count)
                             .tabItem {
-                                Label("Mp3s", systemImage: "music.note")
+                                Label("Queue", systemImage: "text.insert")
                             }
 
                         PlaylistsView(networkManager: networkManager)
@@ -27,10 +27,10 @@ struct MainView: View {
                                 Label("Playlists", systemImage: "music.note.list")
                             }
 
-                        QueuedMp3sView(networkManager: networkManager)
-                            .badge(networkManager.queuedMp3s.count)
+                        Mp3sView(networkManager: networkManager)
+                            .badge(networkManager.mp3s.count)
                             .tabItem {
-                                Label("Queue", systemImage: "text.insert")
+                                Label("Mp3s", systemImage: "music.note")
                             }
 
                         LogoutView()

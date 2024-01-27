@@ -31,39 +31,57 @@ struct QueuedMp3sView: View {
                 .searchable(text: $searchText)
                 .onAppear {
                     if !self.playerManager.isPlaying {
-                        self.playerManager.newMp3(mp3: networkManager.currentMp3?.mp3)
+                        if let mp3 = networkManager.currentMp3?.mp3 {
+                            self.playerManager.newMp3(mp3: mp3)
+                        } else {
+                            print("Current mp3 not found")
+                        }
                     }
                 }
 
-                if networkManager.currentMp3 != nil {
-                    VStack {
-                        Button(action: {
-                            self.playerManager.playPause()
-                        }) {
-                            Image(systemName: self.playerManager.isPlaying ? "pause.circle" : "play.circle")
-                                .resizable()
-                                .frame(width: 50, height: 50)
-                        }
-                        Slider(
-                            value: Binding(
-                                get: { self.playerManager.currentTime },
-                                set: { newTime in self.playerManager.seek(to: newTime) }
-                            ),
-                            in: 0 ... Double(networkManager.currentMp3?.mp3.length ?? 0)
-                        )
-                        Text("\(formatTime(Int(self.playerManager.currentTime))) / \(formatTime(networkManager.currentMp3?.mp3.length ?? 0))")
+                VStack {
+                    Button(action: {
+                        self.playerManager.playPause()
+                    }) {
+                        Image(systemName: self.playerManager.isPlaying ? "pause.circle" : "play.circle")
+                            .resizable()
+                            .frame(width: 50, height: 50)
                     }
-                    .padding(.horizontal, 30).padding(.vertical, 10)
-                    .onChange(of: playerManager.ended) {
-                        if playerManager.ended {
-                            self.networkManager.nextQueuedMp3()
-                        }
+                    Slider(
+                        value: Binding(
+                            get: { self.playerManager.currentTime },
+                            set: { newTime in self.playerManager.seek(to: newTime) }
+                        ),
+                        in: 0 ... Double(networkManager.currentMp3?.mp3.length ?? 0)
+                    )
+                    Text("\(formatTime(Int(self.playerManager.currentTime))) / \(formatTime(networkManager.currentMp3?.mp3.length ?? 0))")
+                }
+                .padding(.horizontal, 30).padding(.vertical, 10)
+                .onChange(of: networkManager.currentMp3) {
+                    print("Current mp3 is now set!")
+                    if let mp3 = networkManager.currentMp3?.mp3 {
+                        self.playerManager.newMp3(mp3: mp3)
+                    } else {
+                        print("But current mp3 didn't actually have an mp3!")
                     }
-                    .onChange(of: networkManager.queuedMp3s) {
-                        if !networkManager.queuedMp3s.isEmpty {
-                            if !self.playerManager.isPlaying {
-                                self.playerManager.newMp3(mp3: networkManager.currentMp3?.mp3)
+                }
+                .onChange(of: playerManager.ended) {
+                    if playerManager.ended {
+                        self.networkManager.nextQueuedMp3()
+                    }
+                }
+                .onChange(of: networkManager.queuedMp3s) {
+                    if !networkManager.queuedMp3s.isEmpty {
+                        if networkManager.currentMp3 == nil {
+                            self.networkManager.currentMp3 = self.networkManager.queuedMp3s.first
+                        }
+
+                        if !self.playerManager.isPlaying {
+                            if let mp3 = networkManager.queuedMp3s.first?.mp3 {
+                                self.playerManager.newMp3(mp3: mp3)
                                 self.playerManager.playPause()
+                            } else {
+                                print("current queued mp3 not found")
                             }
                         }
                     }

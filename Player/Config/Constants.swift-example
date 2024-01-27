@@ -1,4 +1,6 @@
 
 enum Constants {
     static let baseUrl = "http://example.com/api"
+    static let maxRetryAttempts = 3
+    static let initialDelayInSeconds = 2
 }

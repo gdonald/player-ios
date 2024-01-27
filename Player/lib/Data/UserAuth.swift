@@ -23,7 +23,7 @@ class UserAuth: ObservableObject {
         let task = URLSession.shared.dataTask(with: request) { [weak self] _, response, error in
 
             if let error = error {
-                print("Request failed: \(error), retryCount: \(retryCount)")
+                print("Check active session request failed: \(error), retryCount: \(retryCount)")
 
                 if retryCount < Constants.maxRetryAttempts {
                     let delay = Constants.initialDelayInSeconds * Int(pow(2.0, Double(retryCount)))
@@ -31,22 +31,21 @@ class UserAuth: ObservableObject {
                         self?.checkActiveSession(retryCount: retryCount + 1)
                     }
                 } else {
-                    print("Max retries reached. Handling the failure.")
+                    print("Max check active session retries reached.")
                 }
                 return
             }
 
-            print("Request successful")
             DispatchQueue.main.async {
                 guard let httpResponse = response as? HTTPURLResponse else {
-                    print("Invalid response")
+                    print("Check active session invalid response")
                     return
                 }
 
                 if httpResponse.statusCode == 200 {
                     self?.isAuthenticated = true
                 } else {
-                    print("Auth failed, HTTP Status Code: \(httpResponse.statusCode)")
+                    print("Check active session auth failed, HTTP Status Code: \(httpResponse.statusCode)")
                 }
             }
         }

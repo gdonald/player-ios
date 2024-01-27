@@ -22,7 +22,7 @@ struct LoginView: View {
 
         let task = URLSession.shared.dataTask(with: request) { _, response, error in
             if let error = error {
-                print("Request failed: \(error), retryCount: \(retryCount)")
+                print("Login request failed: \(error), retryCount: \(retryCount)")
 
                 if retryCount < Constants.maxRetryAttempts {
                     let delay = Constants.initialDelayInSeconds * Int(pow(2.0, Double(retryCount)))
@@ -34,7 +34,7 @@ struct LoginView: View {
                         )
                     }
                 } else {
-                    print("Max retries reached. Handling the failure.")
+                    print("Max login request retries reached.")
                 }
                 return
             }
@@ -42,7 +42,7 @@ struct LoginView: View {
             if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode == 200 {
                     DispatchQueue.main.async {
-                        self.userAuth.isAuthenticated = true
+                        userAuth.isAuthenticated = true
                     }
                 } else {
                     print("Login failed, HTTP Status Code: \(httpResponse.statusCode)")
@@ -54,8 +54,7 @@ struct LoginView: View {
                         if cookie.name == "_player_session" {
                             DispatchQueue.main.async {
                                 if let data = cookie.value.data(using: .utf8) {
-                                    let status = KeychainHelper.save(key: "sessionCookie", data: data)
-                                    if status != 0 {
+                                    if KeychainHelper.save(key: "sessionCookie", data: data) != 0 {
                                         print("Failed to save session cookie")
                                     }
                                 }

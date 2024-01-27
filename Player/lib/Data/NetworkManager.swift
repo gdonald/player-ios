@@ -19,7 +19,7 @@ class NetworkManager: ObservableObject {
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) { data, _, error in
                 if let error = error {
-                    print("Request failed: \(error), retryCount: \(retryCount)")
+                    print("Fetch Mp3s request failed: \(error), retryCount: \(retryCount)")
 
                     if retryCount < Constants.maxRetryAttempts {
                         let delay = Constants.initialDelayInSeconds * Int(pow(2.0, Double(retryCount)))
@@ -27,12 +27,10 @@ class NetworkManager: ObservableObject {
                             self.fetchMp3s(retryCount: retryCount + 1)
                         }
                     } else {
-                        print("Max retries reached. Handling the failure.")
+                        print("Max fetch mp3s retries reached.")
                     }
                     return
                 }
-
-                print("Request successful")
 
                 let decoder = JSONDecoder()
                 if let safeData = data {
@@ -55,7 +53,7 @@ class NetworkManager: ObservableObject {
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) { data, _, error in
                 if let error = error {
-                    print("Request failed: \(error), retryCount: \(retryCount)")
+                    print("Fetch queued mp3s request failed: \(error), retryCount: \(retryCount)")
 
                     if retryCount < Constants.maxRetryAttempts {
                         let delay = Constants.initialDelayInSeconds * Int(pow(2.0, Double(retryCount)))
@@ -63,12 +61,10 @@ class NetworkManager: ObservableObject {
                             self.fetchQueuedMp3s(retryCount: retryCount + 1)
                         }
                     } else {
-                        print("Max retries reached. Handling the failure.")
+                        print("Max fetch queued mp3s retries reached.")
                     }
                     return
                 }
-
-                print("Request successful")
 
                 let decoder = JSONDecoder()
                 if let safeData = data {
@@ -92,7 +88,7 @@ class NetworkManager: ObservableObject {
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) { data, _, error in
                 if let error = error {
-                    print("Request failed: \(error), retryCount: \(retryCount)")
+                    print("Fetch playlists request failed: \(error), retryCount: \(retryCount)")
 
                     if retryCount < Constants.maxRetryAttempts {
                         let delay = Constants.initialDelayInSeconds * Int(pow(2.0, Double(retryCount)))
@@ -100,12 +96,10 @@ class NetworkManager: ObservableObject {
                             self.fetchPlaylists(retryCount: retryCount + 1)
                         }
                     } else {
-                        print("Max retries reached. Handling the failure.")
+                        print("Max fetch playlists retries reached.")
                     }
                     return
                 }
-
-                print("Request successful")
 
                 let decoder = JSONDecoder()
                 if let safeData = data {
@@ -135,7 +129,7 @@ class NetworkManager: ObservableObject {
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: request) { data, response, error in
                 if let error = error {
-                    print("Request failed: \(error), retryCount: \(retryCount)")
+                    print("Next queued mp3 request failed: \(error), retryCount: \(retryCount)")
 
                     if retryCount < Constants.maxRetryAttempts {
                         let delay = Constants.initialDelayInSeconds * Int(pow(2.0, Double(retryCount)))
@@ -143,13 +137,13 @@ class NetworkManager: ObservableObject {
                             self.nextQueuedMp3(retryCount: retryCount + 1)
                         }
                     } else {
-                        print("Max retries reached. Handling the failure.")
+                        print("Max next queued mp3 retries reached.")
                     }
                     return
                 }
 
                 guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
-                    print("Error: Invalid response or status code")
+                    print("Next queued mp3 error: Invalid response or status code")
                     return
                 }
 

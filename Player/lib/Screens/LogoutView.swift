@@ -10,8 +10,7 @@ struct LogoutView: View {
         }
 
         if let data = "".data(using: .utf8) {
-            let status = KeychainHelper.save(key: "sessionCookie", data: data)
-            if status != 0 {
+            if KeychainHelper.save(key: "sessionCookie", data: data) != 0 {
                 print("Failed to clear session cookie")
             }
         }
