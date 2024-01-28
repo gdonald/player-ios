@@ -72,34 +72,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6664911B2B5C1CA800185A29 /* Audio */ = {
-			isa = PBXGroup;
-			children = (
-				6664911C2B5C1CC500185A29 /* AudioPlayerManager.swift */,
-				66B6F4572B5D6D6A0017C5F5 /* Utils.swift */,
-			);
-			path = Audio;
-			sourceTree = "<group>";
-		};
-		6664911F2B5C4F3600185A29 /* Config */ = {
-			isa = PBXGroup;
-			children = (
-				666491202B5C4F4900185A29 /* Constants.swift */,
-				666491222B5C505000185A29 /* Constants.swift-example */,
-			);
-			path = Config;
-			sourceTree = "<group>";
-		};
-		66B6F4482B5C562C0017C5F5 /* lib */ = {
-			isa = PBXGroup;
-			children = (
-				66F6C21B2B5C113300DC43FF /* Screens */,
-				66F6C21D2B5C11B200DC43FF /* Data */,
-				6664911B2B5C1CA800185A29 /* Audio */,
-			);
-			path = lib;
-			sourceTree = "<group>";
-		};
 		66DCBCE52B58B7A300793522 = {
 			isa = PBXGroup;
 			children = (
@@ -119,8 +91,27 @@
 		66DCBCF02B58B7A300793522 /* Player */ = {
 			isa = PBXGroup;
 			children = (
-				66B6F4482B5C562C0017C5F5 /* lib */,
-				6664911F2B5C4F3600185A29 /* Config */,
+				66F6C2192B5BEB8900DC43FF /* Mp3ListItem.swift */,
+				66B6F44B2B5C58220017C5F5 /* PlaylistListItem.swift */,
+				66B6F4532B5CAFD70017C5F5 /* QueuedMp3ListItem.swift */,
+				66DCBCF32B58B7A300793522 /* MainView.swift */,
+				66DCBD1B2B58B96D00793522 /* Mp3sView.swift */,
+				66DCBD1D2B58BACB00793522 /* PlaylistsView.swift */,
+				66B6F4492B5C57DE0017C5F5 /* PlaylistView.swift */,
+				66DCBD1F2B58BB0C00793522 /* QueuedMp3sView.swift */,
+				669481682B5EF64700A32421 /* LoginView.swift */,
+				6674E3272B5F2EE600C344BE /* LogoutView.swift */,
+				66B6F4512B5C980C0017C5F5 /* NetworkManager.swift */,
+				66F6C2152B5B4FA300DC43FF /* Mp3sData.swift */,
+				66B6F4462B5C56170017C5F5 /* PlaylistsData.swift */,
+				66B6F44F2B5C71620017C5F5 /* MainCountsData.swift */,
+				66B6F4552B5CB0540017C5F5 /* QueuedMp3sData.swift */,
+				6694816A2B5EF8FC00A32421 /* UserAuth.swift */,
+				6694816C2B5F209100A32421 /* KeychainHelper.swift */,
+				6664911C2B5C1CC500185A29 /* AudioPlayerManager.swift */,
+				66B6F4572B5D6D6A0017C5F5 /* Utils.swift */,
+				666491202B5C4F4900185A29 /* Constants.swift */,
+				666491222B5C505000185A29 /* Constants.swift-example */,
 				6664911E2B5C300400185A29 /* Info.plist */,
 				66DCBCF12B58B7A300793522 /* PlayerApp.swift */,
 				66DCBCF52B58B7A400793522 /* Assets.xcassets */,
@@ -135,45 +126,6 @@
 				66DCBCF82B58B7A400793522 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
-			sourceTree = "<group>";
-		};
-		66F6C21B2B5C113300DC43FF /* Screens */ = {
-			isa = PBXGroup;
-			children = (
-				66F6C21C2B5C116400DC43FF /* Partials */,
-				66DCBCF32B58B7A300793522 /* MainView.swift */,
-				66DCBD1B2B58B96D00793522 /* Mp3sView.swift */,
-				66DCBD1D2B58BACB00793522 /* PlaylistsView.swift */,
-				66B6F4492B5C57DE0017C5F5 /* PlaylistView.swift */,
-				66DCBD1F2B58BB0C00793522 /* QueuedMp3sView.swift */,
-				669481682B5EF64700A32421 /* LoginView.swift */,
-				6674E3272B5F2EE600C344BE /* LogoutView.swift */,
-			);
-			path = Screens;
-			sourceTree = "<group>";
-		};
-		66F6C21C2B5C116400DC43FF /* Partials */ = {
-			isa = PBXGroup;
-			children = (
-				66F6C2192B5BEB8900DC43FF /* Mp3ListItem.swift */,
-				66B6F44B2B5C58220017C5F5 /* PlaylistListItem.swift */,
-				66B6F4532B5CAFD70017C5F5 /* QueuedMp3ListItem.swift */,
-			);
-			path = Partials;
-			sourceTree = "<group>";
-		};
-		66F6C21D2B5C11B200DC43FF /* Data */ = {
-			isa = PBXGroup;
-			children = (
-				66B6F4512B5C980C0017C5F5 /* NetworkManager.swift */,
-				66F6C2152B5B4FA300DC43FF /* Mp3sData.swift */,
-				66B6F4462B5C56170017C5F5 /* PlaylistsData.swift */,
-				66B6F44F2B5C71620017C5F5 /* MainCountsData.swift */,
-				66B6F4552B5CB0540017C5F5 /* QueuedMp3sData.swift */,
-				6694816A2B5EF8FC00A32421 /* UserAuth.swift */,
-				6694816C2B5F209100A32421 /* KeychainHelper.swift */,
-			);
-			path = Data;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

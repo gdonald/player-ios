@@ -163,4 +163,106 @@ class NetworkManager: ObservableObject {
             task.resume()
         }
     }
+
+    func createQueuedMp3(mp3Id: String, retryCount: Int = 0) {
+        guard let url = URL(string: "\(Constants.baseUrl)/queued_mp3s") else { return }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let body: [String: Any] = [
+            "queued_mp3": [
+                "mp3_id": mp3Id
+            ]
+        ]
+
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+
+        let task = URLSession.shared.dataTask(with: request) { data, _, error in
+            if let error = error {
+                print("Create queued mp3 request failed: \(error), retryCount: \(retryCount)")
+
+                if retryCount < Constants.maxRetryAttempts {
+                    let delay = Constants.initialDelayInSeconds * Int(pow(2.0, Double(retryCount)))
+                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(delay)) {
+                        self.createQueuedMp3(
+                            mp3Id: mp3Id,
+                            retryCount: retryCount + 1
+                        )
+                    }
+                } else {
+                    print("Max create queued mp3 request retries reached.")
+                }
+                return
+            }
+
+            let decoder = JSONDecoder()
+            if let safeData = data {
+                do {
+                    let results = try decoder.decode(QueuedMp3s.self, from: safeData)
+
+                    // TODO: make this optional behavior:
+//                    DispatchQueue.main.async {
+//                        self.queuedMp3s = results.queued_mp3s
+//                        if self.currentMp3 == nil {
+//                            self.currentMp3 = self.queuedMp3s.first
+//                        }
+//                    }
+                } catch {
+                    print(error)
+                }
+            }
+        }
+        task.resume()
+    }
+
+    func createQueuedMp3sFromPlaylist(playlistId: String, retryCount: Int = 0) {
+        guard let url = URL(string: "\(Constants.baseUrl)/playlists/\(playlistId)/enqueue") else { return }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let body: [String: Any] = [:]
+
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+
+        let task = URLSession.shared.dataTask(with: request) { data, _, error in
+            if let error = error {
+                print("Created queued mp3s from playlist request failed: \(error), retryCount: \(retryCount)")
+
+                if retryCount < Constants.maxRetryAttempts {
+                    let delay = Constants.initialDelayInSeconds * Int(pow(2.0, Double(retryCount)))
+                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(delay)) {
+                        self.createQueuedMp3sFromPlaylist(
+                            playlistId: playlistId,
+                            retryCount: retryCount + 1
+                        )
+                    }
+                } else {
+                    print("Max create queued mp3s from playlist request retries reached.")
+                }
+                return
+            }
+
+            let decoder = JSONDecoder()
+            if let safeData = data {
+                do {
+                    let results = try decoder.decode(QueuedMp3s.self, from: safeData)
+
+                    // TODO: make this optional behavior:
+//                    DispatchQueue.main.async {
+//                        self.queuedMp3s = results.queued_mp3s
+//                        if self.currentMp3 == nil {
+//                            self.currentMp3 = self.queuedMp3s.first
+//                        }
+//                    }
+                } catch {
+                    print(error)
+                }
+            }
+        }
+        task.resume()
+    }
 }

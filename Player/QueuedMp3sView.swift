@@ -29,40 +29,45 @@ struct QueuedMp3sView: View {
                     .listRowInsets(EdgeInsets())
                 }
                 .searchable(text: $searchText)
+                .refreshable {
+                    networkManager.fetchQueuedMp3s()
+                }
                 .onAppear {
                     if !self.playerManager.isPlaying {
                         if let mp3 = networkManager.currentMp3?.mp3 {
                             self.playerManager.newMp3(mp3: mp3)
                         } else {
-                            print("Current mp3 not found")
+                            // print("Current mp3 not found")
                         }
                     }
                 }
 
                 VStack {
-                    Button(action: {
-                        self.playerManager.playPause()
-                    }) {
-                        Image(systemName: self.playerManager.isPlaying ? "pause.circle" : "play.circle")
-                            .resizable()
-                            .frame(width: 50, height: 50)
+                    if networkManager.currentMp3 != nil {
+                        Button(action: {
+                            self.playerManager.playPause()
+                        }) {
+                            Image(systemName: self.playerManager.isPlaying ? "pause.circle" : "play.circle")
+                                .resizable()
+                                .frame(width: 50, height: 50)
+                        }
+                        Slider(
+                            value: Binding(
+                                get: { self.playerManager.currentTime },
+                                set: { newTime in self.playerManager.seek(to: newTime) }
+                            ),
+                            in: 0 ... Double(networkManager.currentMp3?.mp3.length ?? 0)
+                        )
+                        Text("\(formatTime(Int(self.playerManager.currentTime))) / \(formatTime(networkManager.currentMp3?.mp3.length ?? 0))")
                     }
-                    Slider(
-                        value: Binding(
-                            get: { self.playerManager.currentTime },
-                            set: { newTime in self.playerManager.seek(to: newTime) }
-                        ),
-                        in: 0 ... Double(networkManager.currentMp3?.mp3.length ?? 0)
-                    )
-                    Text("\(formatTime(Int(self.playerManager.currentTime))) / \(formatTime(networkManager.currentMp3?.mp3.length ?? 0))")
                 }
                 .padding(.horizontal, 30).padding(.vertical, 10)
                 .onChange(of: networkManager.currentMp3) {
-                    print("Current mp3 is now set!")
+                    // print("Current mp3 is now set!")
                     if let mp3 = networkManager.currentMp3?.mp3 {
                         self.playerManager.newMp3(mp3: mp3)
                     } else {
-                        print("But current mp3 didn't actually have an mp3!")
+                        // print("But current mp3 didn't actually have an mp3!")
                     }
                 }
                 .onChange(of: playerManager.ended) {
