@@ -3,7 +3,7 @@ import AVFoundation
 import Combine
 import SwiftUI
 
-class AudioPlayerManager: NSObject, ObservableObject {
+class AudioPlayer: NSObject, ObservableObject {
     private var audioPlayer: AVPlayer?
     private var timeObserverToken: Any?
     private var playerItem: AVPlayerItem?
@@ -26,20 +26,17 @@ class AudioPlayerManager: NSObject, ObservableObject {
             return
         }
 
-//        print(mp3 as Any)
-
         if let localURL = localFileURL(for: mp3Id) {
-            print("Existing localURL found: \(localURL)")
             setupPlayer(with: localURL)
         } else {
             let urlString = "\(Constants.baseUrl)/mp3s/\(mp3Id)/play"
-            print("No localURL found, need to download: urlString: \(urlString)")
+
             downloadMP3(from: urlString) { [weak self] tempURL in
                 guard let self = self, let tempURL = tempURL else { return }
-                print("New download tempURL: \(tempURL)")
+
                 self.saveMP3Locally(originalURL: tempURL, mp3Id: mp3Id) { localURL in
                     guard let localURL = localURL else { return }
-                    print("New localURL: \(localURL)")
+
                     self.setupPlayer(with: localURL)
                 }
             }
@@ -47,7 +44,13 @@ class AudioPlayerManager: NSObject, ObservableObject {
     }
 
     private func setupPlayer(with url: URL) {
-        print("Setting up player with URL: \(url)")
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print("Failed to set audio session category. Error: \(error)")
+        }
+
         DispatchQueue.main.async {
             self.playerItem = AVPlayerItem(url: url)
             self.audioPlayer = AVPlayer(playerItem: self.playerItem)

@@ -7,6 +7,7 @@ class NetworkManager: ObservableObject {
     @Published var playlists = [Playlist]()
     @Published var queuedMp3s = [QueuedMp3]()
     @Published var currentMp3: QueuedMp3?
+    @Published var needToFetchQueuedMp3s: Bool = false
 
     func fetch() {
         fetchMp3s()
@@ -118,11 +119,20 @@ class NetworkManager: ObservableObject {
     }
 
     func nextQueuedMp3(retryCount: Int = 0) {
-        if currentMp3 == nil {
+        let mp3ToDequeue = currentMp3
+
+        // update local data manually instead of waiting for a network request
+        if queuedMp3s.count >= 2 {
+            currentMp3 = queuedMp3s[1]
+            queuedMp3s.removeFirst()
+        } else if queuedMp3s.count == 1 {
+            currentMp3 = nil
+            queuedMp3s.removeFirst()
+        } else if queuedMp3s.isEmpty || mp3ToDequeue == nil {
             return
         }
 
-        if let url = URL(string: "\(Constants.baseUrl)/queued_mp3s/\(currentMp3?.id ?? 0).json") {
+        if let url = URL(string: "\(Constants.baseUrl)/queued_mp3s/\(mp3ToDequeue?.id ?? 0).json") {
             var request = URLRequest(url: url)
             request.httpMethod = "DELETE"
 
@@ -153,7 +163,6 @@ class NetworkManager: ObservableObject {
                         let results = try decoder.decode(QueuedMp3s.self, from: safeData)
                         DispatchQueue.main.async {
                             self.queuedMp3s = results.queued_mp3s
-                            self.currentMp3 = self.queuedMp3s.first
                         }
                     } catch {
                         print(error)
@@ -179,7 +188,7 @@ class NetworkManager: ObservableObject {
 
         request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
 
-        let task = URLSession.shared.dataTask(with: request) { data, _, error in
+        let task = URLSession.shared.dataTask(with: request) { _, _, error in
             if let error = error {
                 print("Create queued mp3 request failed: \(error), retryCount: \(retryCount)")
 
@@ -195,23 +204,8 @@ class NetworkManager: ObservableObject {
                     print("Max create queued mp3 request retries reached.")
                 }
                 return
-            }
-
-            let decoder = JSONDecoder()
-            if let safeData = data {
-                do {
-                    let results = try decoder.decode(QueuedMp3s.self, from: safeData)
-
-                    // TODO: make this optional behavior:
-//                    DispatchQueue.main.async {
-//                        self.queuedMp3s = results.queued_mp3s
-//                        if self.currentMp3 == nil {
-//                            self.currentMp3 = self.queuedMp3s.first
-//                        }
-//                    }
-                } catch {
-                    print(error)
-                }
+            } else {
+                self.needToFetchQueuedMp3s = true
             }
         }
         task.resume()
@@ -228,7 +222,7 @@ class NetworkManager: ObservableObject {
 
         request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
 
-        let task = URLSession.shared.dataTask(with: request) { data, _, error in
+        let task = URLSession.shared.dataTask(with: request) { _, _, error in
             if let error = error {
                 print("Created queued mp3s from playlist request failed: \(error), retryCount: \(retryCount)")
 
@@ -244,23 +238,8 @@ class NetworkManager: ObservableObject {
                     print("Max create queued mp3s from playlist request retries reached.")
                 }
                 return
-            }
-
-            let decoder = JSONDecoder()
-            if let safeData = data {
-                do {
-                    let results = try decoder.decode(QueuedMp3s.self, from: safeData)
-
-                    // TODO: make this optional behavior:
-//                    DispatchQueue.main.async {
-//                        self.queuedMp3s = results.queued_mp3s
-//                        if self.currentMp3 == nil {
-//                            self.currentMp3 = self.queuedMp3s.first
-//                        }
-//                    }
-                } catch {
-                    print(error)
-                }
+            } else {
+                self.needToFetchQueuedMp3s = true
             }
         }
         task.resume()

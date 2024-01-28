@@ -3,7 +3,7 @@ import SwiftUI
 
 struct PlaylistsView: View {
     @ObservedObject var networkManager: NetworkManager
-    @State private var searchText = ""
+    @State private var searchText: String = UserDefaults.standard.string(forKey: "savedPlaylistsSearchText") ?? ""
     @State private var showMessage = false
     @State private var message = ""
 
@@ -38,6 +38,9 @@ struct PlaylistsView: View {
                             }
                     }
                     .searchable(text: $searchText)
+                    .onChange(of: searchText) { _, newValue in
+                        UserDefaults.standard.set(newValue, forKey: "savedPlaylistsSearchText")
+                    }
                 }
 
                 if showMessage {
