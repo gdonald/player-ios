@@ -5,6 +5,7 @@ struct QueuedMp3sView: View {
     @StateObject private var audioPlayer = AudioPlayer()
     @ObservedObject var networkManager: NetworkManager
     @State private var searchText: String = UserDefaults.standard.string(forKey: "savedQueuedMp3sSearchText") ?? ""
+    @State private var justStarted: Bool = true
 
     var filteredItems: [QueuedMp3] {
         if searchText.isEmpty {
@@ -15,6 +16,14 @@ struct QueuedMp3sView: View {
                     ||
                     $0.mp3.artist_name.localizedCaseInsensitiveContains(searchText)
             }.sorted { $0.position < $1.position }
+        }
+    }
+
+    func playNextQueuedMp3IfAvailable() {
+        if justStarted && !networkManager.queuedMp3s.isEmpty && !audioPlayer.isPlaying {
+            if let mp3 = networkManager.queuedMp3s.first?.mp3 {
+                audioPlayer.newMp3(mp3: mp3)
+            }
         }
     }
 
@@ -46,6 +55,8 @@ struct QueuedMp3sView: View {
                         networkManager.needToFetchQueuedMp3s = false
                         networkManager.fetchQueuedMp3s()
                     }
+
+                    justStarted = false
                 }
 
                 VStack {
@@ -79,14 +90,7 @@ struct QueuedMp3sView: View {
                     }
                 }
                 .onChange(of: networkManager.queuedMp3s) {
-                    if !networkManager.queuedMp3s.isEmpty {
-                        if !self.audioPlayer.isPlaying {
-                            if let mp3 = networkManager.queuedMp3s.first?.mp3 {
-                                self.audioPlayer.newMp3(mp3: mp3)
-                                self.audioPlayer.playPause()
-                            }
-                        }
-                    }
+                    self.playNextQueuedMp3IfAvailable()
                 }
             }
         }

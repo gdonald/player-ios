@@ -58,6 +58,7 @@ class AudioPlayer: NSObject, ObservableObject {
             self.addObserver()
 
             self.playerItem?.addObserver(self, forKeyPath: "status", options: [.new, .old], context: nil)
+            self.playPause()
         }
     }
 
