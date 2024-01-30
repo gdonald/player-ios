@@ -13,6 +13,7 @@
 		669481692B5EF64700A32421 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 669481682B5EF64700A32421 /* LoginView.swift */; };
 		6694816B2B5EF8FC00A32421 /* UserAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6694816A2B5EF8FC00A32421 /* UserAuth.swift */; };
 		6694816D2B5F209100A32421 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6694816C2B5F209100A32421 /* KeychainHelper.swift */; };
+		66A8DAA12B69591100D76FE8 /* BlueToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A8DAA02B69591100D76FE8 /* BlueToggleStyle.swift */; };
 		66B6F4472B5C56170017C5F5 /* PlaylistsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B6F4462B5C56170017C5F5 /* PlaylistsData.swift */; };
 		66B6F44A2B5C57DE0017C5F5 /* PlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B6F4492B5C57DE0017C5F5 /* PlaylistView.swift */; };
 		66B6F44C2B5C58220017C5F5 /* PlaylistListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B6F44B2B5C58220017C5F5 /* PlaylistListItem.swift */; };
@@ -41,6 +42,7 @@
 		669481682B5EF64700A32421 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		6694816A2B5EF8FC00A32421 /* UserAuth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAuth.swift; sourceTree = "<group>"; };
 		6694816C2B5F209100A32421 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		66A8DAA02B69591100D76FE8 /* BlueToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueToggleStyle.swift; sourceTree = "<group>"; };
 		66B6F4462B5C56170017C5F5 /* PlaylistsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsData.swift; sourceTree = "<group>"; };
 		66B6F4492B5C57DE0017C5F5 /* PlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistView.swift; sourceTree = "<group>"; };
 		66B6F44B2B5C58220017C5F5 /* PlaylistListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistListItem.swift; sourceTree = "<group>"; };
@@ -93,6 +95,7 @@
 			children = (
 				6664911E2B5C300400185A29 /* Info.plist */,
 				6664911C2B5C1CC500185A29 /* AudioPlayer.swift */,
+				66A8DAA02B69591100D76FE8 /* BlueToggleStyle.swift */,
 				666491202B5C4F4900185A29 /* Constants.swift */,
 				6694816C2B5F209100A32421 /* KeychainHelper.swift */,
 				669481682B5EF64700A32421 /* LoginView.swift */,
@@ -217,6 +220,7 @@
 				66B6F44C2B5C58220017C5F5 /* PlaylistListItem.swift in Sources */,
 				669481692B5EF64700A32421 /* LoginView.swift in Sources */,
 				66B6F4582B5D6D6A0017C5F5 /* Utils.swift in Sources */,
+				66A8DAA12B69591100D76FE8 /* BlueToggleStyle.swift in Sources */,
 				6674E3282B5F2EE600C344BE /* LogoutView.swift in Sources */,
 				66DCBCF22B58B7A300793522 /* PlayerApp.swift in Sources */,
 			);

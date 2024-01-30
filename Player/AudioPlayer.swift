@@ -4,6 +4,7 @@ import Combine
 import SwiftUI
 
 class AudioPlayer: NSObject, ObservableObject {
+    @ObservedObject var networkManager = NetworkManager()
     private var audioPlayer: AVPlayer?
     private var timeObserverToken: Any?
     private var playerItem: AVPlayerItem?
@@ -29,7 +30,7 @@ class AudioPlayer: NSObject, ObservableObject {
         if let localURL = localFileURL(for: mp3Id) {
             setupPlayer(with: localURL)
         } else {
-            let urlString = "\(Constants.baseUrl)/mp3s/\(mp3Id)/play"
+            let urlString = "\(networkManager.baseUrl)/api/mp3s/\(mp3Id)/play"
 
             downloadMP3(from: urlString) { [weak self] tempURL in
                 guard let self = self, let tempURL = tempURL else { return }

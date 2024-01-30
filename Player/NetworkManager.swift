@@ -2,12 +2,21 @@
 import Foundation
 
 class NetworkManager: ObservableObject {
+    var baseUrl: String = ""
     @Published var mainCounts = MainCounts(mp3s_count: 0, playlists_count: 0, queued_mp3s_count: 0, sources_count: 0)
     @Published var mp3s = [Mp3]()
     @Published var playlists = [Playlist]()
     @Published var queuedMp3s = [QueuedMp3]()
     @Published var currentMp3: QueuedMp3?
     @Published var needToFetchQueuedMp3s: Bool = false
+
+    init() {
+        if let receivedData = KeychainHelper.load(key: "baseUrl"),
+           let value = String(data: receivedData, encoding: .utf8)
+        {
+            self.baseUrl = value
+        }
+    }
 
     func fetch() {
         fetchMp3s()
@@ -16,7 +25,7 @@ class NetworkManager: ObservableObject {
     }
 
     func fetchMp3s(retryCount: Int = 0) {
-        if let url = URL(string: "\(Constants.baseUrl)/mp3s.json") {
+        if let url = URL(string: "\(baseUrl)/api/mp3s.json") {
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) { data, _, error in
                 if let error = error {
@@ -50,7 +59,7 @@ class NetworkManager: ObservableObject {
     }
 
     func fetchQueuedMp3s(retryCount: Int = 0) {
-        if let url = URL(string: "\(Constants.baseUrl)/queued_mp3s.json") {
+        if let url = URL(string: "\(baseUrl)/api/queued_mp3s.json") {
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) { data, _, error in
                 if let error = error {
@@ -85,7 +94,7 @@ class NetworkManager: ObservableObject {
     }
 
     func fetchPlaylists(retryCount: Int = 0) {
-        if let url = URL(string: "\(Constants.baseUrl)/playlists.json") {
+        if let url = URL(string: "\(baseUrl)/api/playlists.json") {
             let session = URLSession(configuration: .default)
             let task = session.dataTask(with: url) { data, _, error in
                 if let error = error {
@@ -132,7 +141,7 @@ class NetworkManager: ObservableObject {
             return
         }
 
-        if let url = URL(string: "\(Constants.baseUrl)/queued_mp3s/\(mp3ToDequeue?.id ?? 0).json") {
+        if let url = URL(string: "\(baseUrl)/api/queued_mp3s/\(mp3ToDequeue?.id ?? 0).json") {
             var request = URLRequest(url: url)
             request.httpMethod = "DELETE"
 
@@ -174,7 +183,7 @@ class NetworkManager: ObservableObject {
     }
 
     func createQueuedMp3(mp3Id: String, retryCount: Int = 0) {
-        guard let url = URL(string: "\(Constants.baseUrl)/queued_mp3s") else { return }
+        guard let url = URL(string: "\(baseUrl)/api/queued_mp3s") else { return }
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -212,7 +221,7 @@ class NetworkManager: ObservableObject {
     }
 
     func createQueuedMp3sFromPlaylist(playlistId: String, retryCount: Int = 0) {
-        guard let url = URL(string: "\(Constants.baseUrl)/playlists/\(playlistId)/enqueue") else { return }
+        guard let url = URL(string: "\(baseUrl)/api/playlists/\(playlistId)/enqueue") else { return }
 
         var request = URLRequest(url: url)
         request.httpMethod = "POST"

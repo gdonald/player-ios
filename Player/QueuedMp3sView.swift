@@ -2,6 +2,7 @@
 import SwiftUI
 
 struct QueuedMp3sView: View {
+    @EnvironmentObject var userAuth: UserAuth
     @StateObject private var audioPlayer = AudioPlayer()
     @ObservedObject var networkManager: NetworkManager
     @State private var searchText: String = UserDefaults.standard.string(forKey: "savedQueuedMp3sSearchText") ?? ""
@@ -45,18 +46,20 @@ struct QueuedMp3sView: View {
                     networkManager.fetchQueuedMp3s()
                 }
                 .onAppear {
-                    if !self.audioPlayer.isPlaying {
-                        if let mp3 = networkManager.currentMp3?.mp3 {
-                            self.audioPlayer.newMp3(mp3: mp3)
+                    if userAuth.isAuthenticated {
+                        if !self.audioPlayer.isPlaying {
+                            if let mp3 = networkManager.currentMp3?.mp3 {
+                                self.audioPlayer.newMp3(mp3: mp3)
+                            }
                         }
-                    }
 
-                    if networkManager.needToFetchQueuedMp3s {
-                        networkManager.needToFetchQueuedMp3s = false
-                        networkManager.fetchQueuedMp3s()
-                    }
+                        if networkManager.needToFetchQueuedMp3s {
+                            networkManager.needToFetchQueuedMp3s = false
+                            networkManager.fetchQueuedMp3s()
+                        }
 
-                    justStarted = false
+                        justStarted = false
+                    }
                 }
 
                 VStack {

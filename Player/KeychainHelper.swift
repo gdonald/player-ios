@@ -2,6 +2,20 @@
 import Foundation
 import Security
 
+extension Data {
+    init(from value: Bool) {
+        var value = value
+        self = withUnsafePointer(to: &value) { pointer -> Data in
+            Data(bytes: pointer, count: MemoryLayout<Bool>.size)
+        }
+    }
+
+    func toBool() -> Bool? {
+        guard count == MemoryLayout<Bool>.size else { return nil }
+        return withUnsafeBytes { $0.load(as: Bool.self) }
+    }
+}
+
 class KeychainHelper {
     class func save(key: String, data: Data) -> OSStatus {
         let query = [
@@ -29,5 +43,15 @@ class KeychainHelper {
         } else {
             return nil
         }
+    }
+
+    static func saveBoolean(key: String, value: Bool) -> OSStatus {
+        let data = Data(from: value)
+        return save(key: key, data: data)
+    }
+
+    static func loadBoolean(key: String) -> Bool? {
+        guard let data = load(key: key) else { return nil }
+        return data.toBool()
     }
 }

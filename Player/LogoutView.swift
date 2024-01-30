@@ -6,20 +6,20 @@ struct LogoutView: View {
 
     func logoutAction() {
         DispatchQueue.main.async {
-            self.userAuth.isAuthenticated = false
-        }
-
-        if let data = "".data(using: .utf8) {
-            if KeychainHelper.save(key: "sessionCookie", data: data) != 0 {
-                print("Failed to clear session cookie")
+            if let data = "".data(using: .utf8) {
+                if KeychainHelper.save(key: "sessionCookie", data: data) != 0 {
+                    print("Failed to clear session cookie")
+                }
             }
+
+            self.userAuth.isAuthenticated = false
         }
     }
 
     var body: some View {
         VStack {
             Text("Are you sure?").padding().font(.title)
-            Button(action: logoutAction) {
+            Button(action: self.logoutAction) {
                 Text("Logout")
                     .foregroundColor(.black)
                     .padding(.horizontal, 12)

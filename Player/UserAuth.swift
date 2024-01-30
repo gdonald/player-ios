@@ -3,6 +3,7 @@ import Combine
 import SwiftUI
 
 class UserAuth: ObservableObject {
+    @ObservedObject var networkManager = NetworkManager()
     @Published var isAuthenticated: Bool = false
 
     init() {
@@ -10,7 +11,7 @@ class UserAuth: ObservableObject {
     }
 
     func checkActiveSession(retryCount: Int = 0) {
-        guard let url = URL(string: "\(Constants.baseUrl)/sessions/active.json") else { return }
+        guard let url = URL(string: "\(networkManager.baseUrl)/api/sessions/active.json") else { return }
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
 
