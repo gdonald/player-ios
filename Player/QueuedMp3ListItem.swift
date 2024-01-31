@@ -7,6 +7,12 @@ struct QueuedMp3ListItem: View {
 
     var body: some View {
         HStack(spacing: 0) {
+            Image(systemName: "trash")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 15, height: 15)
+                .padding(5)
+
             Text(queuedMp3.mp3.title)
                 .font(.system(size: 17))
                 .frame(maxWidth: .infinity, alignment: .leading)

@@ -8,7 +8,6 @@ class NetworkManager: ObservableObject {
     @Published var playlists = [Playlist]()
     @Published var queuedMp3s = [QueuedMp3]()
     @Published var currentMp3: QueuedMp3?
-    @Published var needToFetchQueuedMp3s: Bool = false
 
     init() {
         if let receivedData = KeychainHelper.load(key: "baseUrl"),
@@ -197,7 +196,7 @@ class NetworkManager: ObservableObject {
 
         request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
 
-        let task = URLSession.shared.dataTask(with: request) { _, _, error in
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 print("Create queued mp3 request failed: \(error), retryCount: \(retryCount)")
 
@@ -213,8 +212,23 @@ class NetworkManager: ObservableObject {
                     print("Max create queued mp3 request retries reached.")
                 }
                 return
-            } else {
-                self.needToFetchQueuedMp3s = true
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                print("Create queued mp3 error: Invalid response or status code")
+                return
+            }
+
+            let decoder = JSONDecoder()
+            if let safeData = data {
+                do {
+                    let results = try decoder.decode(QueuedMp3s.self, from: safeData)
+                    DispatchQueue.main.async {
+                        self.queuedMp3s = results.queued_mp3s
+                    }
+                } catch {
+                    print(error)
+                }
             }
         }
         task.resume()
@@ -231,7 +245,7 @@ class NetworkManager: ObservableObject {
 
         request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
 
-        let task = URLSession.shared.dataTask(with: request) { _, _, error in
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 print("Created queued mp3s from playlist request failed: \(error), retryCount: \(retryCount)")
 
@@ -247,8 +261,84 @@ class NetworkManager: ObservableObject {
                     print("Max create queued mp3s from playlist request retries reached.")
                 }
                 return
-            } else {
-                self.needToFetchQueuedMp3s = true
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                print("Create queued mp3s from playlist error: Invalid response or status code")
+                return
+            }
+
+            let decoder = JSONDecoder()
+            if let safeData = data {
+                do {
+                    let results = try decoder.decode(QueuedMp3s.self, from: safeData)
+                    DispatchQueue.main.async {
+                        self.queuedMp3s = results.queued_mp3s
+                    }
+                } catch {
+                    print(error)
+                }
+            }
+        }
+        task.resume()
+    }
+
+    func deleteQueuedMp3(queuedMp3Id: String, retryCount: Int = 0) {
+        guard let url = URL(string: "\(baseUrl)/api/queued_mp3s/\(queuedMp3Id)") else { return }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        let body: [String: Any] = [:]
+
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Delete queued mp3 request failed: \(error), retryCount: \(retryCount)")
+
+                if retryCount < Constants.maxRetryAttempts {
+                    let delay = Constants.initialDelayInSeconds * Int(pow(2.0, Double(retryCount)))
+                    DispatchQueue.main.asyncAfter(deadline: .now() + Double(delay)) {
+                        self.deleteQueuedMp3(
+                            queuedMp3Id: queuedMp3Id,
+                            retryCount: retryCount + 1
+                        )
+                    }
+                } else {
+                    print("Max delete queued mp3 request retries reached.")
+                }
+                return
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+                print("Delete queued mp3 error: Invalid response or status code")
+                return
+            }
+
+            let decoder = JSONDecoder()
+            if let safeData = data {
+                do {
+                    let results = try decoder.decode(QueuedMp3s.self, from: safeData)
+                    DispatchQueue.main.async {
+                        self.queuedMp3s = results.queued_mp3s
+
+                        if results.queued_mp3s.isEmpty {
+                            return
+                        }
+
+                        if let firstQueuedMp3Id = results.queued_mp3s.first?.id {
+                            if let currentMp3Id = self.currentMp3?.id {
+                                if firstQueuedMp3Id != currentMp3Id {
+                                    self.currentMp3 = results.queued_mp3s.first
+                                }
+                            }
+                        }
+                    }
+                } catch {
+                    print(error)
+                }
             }
         }
         task.resume()

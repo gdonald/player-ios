@@ -52,6 +52,7 @@ struct PlaylistsView: View {
                         .transition(.opacity)
                         .animation(.easeInOut, value: showMessage)
                         .zIndex(1)
+                        .multilineTextAlignment(.center)
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 }
             }
