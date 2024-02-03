@@ -27,18 +27,20 @@ class AudioPlayer: NSObject, ObservableObject {
             return
         }
 
-        if let localURL = localFileURL(for: mp3Id) {
-            setupPlayer(with: localURL)
-        } else {
-            let urlString = "\(networkManager.baseUrl)/api/mp3s/\(mp3Id)/play"
+        if let safeMp3 = mp3 {
+            if let localURL = localFileURL(for: safeMp3) {
+                setupPlayer(with: localURL)
+            } else {
+                let urlString = "\(networkManager.baseUrl)/api/mp3s/\(safeMp3.id)/play"
 
-            downloadMP3(from: urlString) { [weak self] tempURL in
-                guard let self = self, let tempURL = tempURL else { return }
+                downloadMP3(from: urlString) { [weak self] tempURL in
+                    guard let self = self, let tempURL = tempURL else { return }
 
-                self.saveMP3Locally(originalURL: tempURL, mp3Id: mp3Id) { localURL in
-                    guard let localURL = localURL else { return }
+                    self.saveMP3Locally(originalURL: tempURL, mp3: safeMp3) { localURL in
+                        guard let localURL = localURL else { return }
 
-                    self.setupPlayer(with: localURL)
+                        self.setupPlayer(with: localURL)
+                    }
                 }
             }
         }
@@ -117,20 +119,18 @@ class AudioPlayer: NSObject, ObservableObject {
         }
     }
 
-    func localFileURL(for mp3Id: Int) -> URL? {
+    func localFileURL(for mp3: Mp3) -> URL? {
         let fileManager = FileManager.default
         let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let fileName = "mp3-\(mp3Id).mp3"
-        let fileURL = documentsDirectory.appendingPathComponent(fileName)
+        let fileURL = documentsDirectory.appendingPathComponent(mp3.nameForFile())
 
         return fileManager.fileExists(atPath: fileURL.path) ? fileURL : nil
     }
 
-    func saveMP3Locally(originalURL: URL, mp3Id: Int, retryCount: Int = 0, completion: @escaping (URL?) -> Void) {
+    func saveMP3Locally(originalURL: URL, mp3: Mp3, retryCount: Int = 0, completion: @escaping (URL?) -> Void) {
         let fileManager = FileManager.default
         let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let fileName = "mp3-\(mp3Id).mp3"
-        let destinationURL = documentsDirectory.appendingPathComponent(fileName)
+        let destinationURL = documentsDirectory.appendingPathComponent(mp3.nameForFile())
 
         do {
             try fileManager.copyItem(at: originalURL, to: destinationURL)
@@ -144,7 +144,7 @@ class AudioPlayer: NSObject, ObservableObject {
                 DispatchQueue.main.asyncAfter(deadline: .now() + delayInSeconds) {
                     self.saveMP3Locally(
                         originalURL: originalURL,
-                        mp3Id: mp3Id,
+                        mp3: mp3,
                         retryCount: retryCount + 1,
                         completion: completion
                     )
