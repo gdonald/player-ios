@@ -429,6 +429,11 @@ class NetworkManager: ObservableObject {
 
         do {
             try fileManager.copyItem(at: originalURL, to: destinationURL)
+
+            if mp3.localFileHash() != mp3.file_hash {
+                print("localFileHash: \(mp3.localFileHash() ?? "") does not match remote file hash: \(mp3.file_hash)")
+                try fileManager.removeItem(at: destinationURL)
+            }
         } catch {
             if retryCount < Constants.maxRetryAttempts {
                 let delayInSeconds = pow(Double(Constants.initialDelayInSeconds), Double(retryCount))

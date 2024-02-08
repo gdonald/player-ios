@@ -1,7 +1,7 @@
 
 import Foundation
 
-class Mp3Cacher: ObservableObject {
+class Mp3Cache: ObservableObject {
     @Published var cachedMp3s = [CachedMp3]()
     let fileManager = FileManager.default
     let documentsDirectory: URL

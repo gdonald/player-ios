@@ -4,7 +4,7 @@ import SwiftUI
 struct MainView: View {
     @EnvironmentObject var userAuth: UserAuth
     @ObservedObject var networkManager = NetworkManager()
-    @ObservedObject var mp3Cacher = Mp3Cacher()
+    @ObservedObject var mp3Cache = Mp3Cache()
     @State private var selectedTab = 1
 
     init() {
@@ -34,7 +34,7 @@ struct MainView: View {
                                 Label("Mp3s", systemImage: "music.note")
                             }
 
-                        CachedMp3sView(mp3Cacher: mp3Cacher)
+                        CachedMp3sView(mp3Cache: mp3Cache)
 //                            .badge(mp3Cacher.cachedMp3s.count)
                             .tabItem {
                                 Label("Cache", systemImage: "square.and.arrow.down.on.square")
