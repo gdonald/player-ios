@@ -18,6 +18,7 @@
 		66A8DAA52B6EAAC200D76FE8 /* Mp3Cacher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A8DAA42B6EAAC200D76FE8 /* Mp3Cacher.swift */; };
 		66A8DAA72B6EAB8C00D76FE8 /* CachedMp3Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A8DAA62B6EAB8C00D76FE8 /* CachedMp3Data.swift */; };
 		66A8DAA92B6EB48A00D76FE8 /* CachedMp3ListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A8DAA82B6EB48A00D76FE8 /* CachedMp3ListItem.swift */; };
+		66A8DAAB2B71BAA000D76FE8 /* PlaylistMp3sData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A8DAAA2B71BAA000D76FE8 /* PlaylistMp3sData.swift */; };
 		66B6F4472B5C56170017C5F5 /* PlaylistsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B6F4462B5C56170017C5F5 /* PlaylistsData.swift */; };
 		66B6F44A2B5C57DE0017C5F5 /* PlaylistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B6F4492B5C57DE0017C5F5 /* PlaylistView.swift */; };
 		66B6F44C2B5C58220017C5F5 /* PlaylistListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66B6F44B2B5C58220017C5F5 /* PlaylistListItem.swift */; };
@@ -51,6 +52,7 @@
 		66A8DAA42B6EAAC200D76FE8 /* Mp3Cacher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mp3Cacher.swift; sourceTree = "<group>"; };
 		66A8DAA62B6EAB8C00D76FE8 /* CachedMp3Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedMp3Data.swift; sourceTree = "<group>"; };
 		66A8DAA82B6EB48A00D76FE8 /* CachedMp3ListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedMp3ListItem.swift; sourceTree = "<group>"; };
+		66A8DAAA2B71BAA000D76FE8 /* PlaylistMp3sData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistMp3sData.swift; sourceTree = "<group>"; };
 		66B6F4462B5C56170017C5F5 /* PlaylistsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsData.swift; sourceTree = "<group>"; };
 		66B6F4492B5C57DE0017C5F5 /* PlaylistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistView.swift; sourceTree = "<group>"; };
 		66B6F44B2B5C58220017C5F5 /* PlaylistListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistListItem.swift; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 				66B6F4512B5C980C0017C5F5 /* NetworkManager.swift */,
 				66DCBCF12B58B7A300793522 /* PlayerApp.swift */,
 				66B6F44B2B5C58220017C5F5 /* PlaylistListItem.swift */,
+				66A8DAAA2B71BAA000D76FE8 /* PlaylistMp3sData.swift */,
 				66B6F4462B5C56170017C5F5 /* PlaylistsData.swift */,
 				66DCBD1D2B58BACB00793522 /* PlaylistsView.swift */,
 				66B6F4492B5C57DE0017C5F5 /* PlaylistView.swift */,
@@ -218,6 +221,7 @@
 				66DCBD1C2B58B96D00793522 /* Mp3sView.swift in Sources */,
 				66B6F4502B5C71620017C5F5 /* MainCountsData.swift in Sources */,
 				6694816D2B5F209100A32421 /* KeychainHelper.swift in Sources */,
+				66A8DAAB2B71BAA000D76FE8 /* PlaylistMp3sData.swift in Sources */,
 				66DCBCF42B58B7A300793522 /* MainView.swift in Sources */,
 				66A8DAA32B6EAA3800D76FE8 /* CachedMp3sView.swift in Sources */,
 				66B6F4562B5CB0540017C5F5 /* QueuedMp3sData.swift in Sources */,

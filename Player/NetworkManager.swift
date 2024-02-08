@@ -8,6 +8,7 @@ class NetworkManager: ObservableObject {
     @Published var playlists = [Playlist]()
     @Published var queuedMp3s = [QueuedMp3]()
     @Published var currentMp3: QueuedMp3?
+    @Published var syncingPlaylists: Bool = false
 
     init() {
         if let receivedData = KeychainHelper.load(key: "baseUrl"),
@@ -116,6 +117,7 @@ class NetworkManager: ObservableObject {
                         let results = try decoder.decode(Playlists.self, from: safeData)
                         DispatchQueue.main.async {
                             self.playlists = results.playlists
+                            self.syncPlaylists()
                         }
                     } catch {
                         print(error)
@@ -342,5 +344,103 @@ class NetworkManager: ObservableObject {
             }
         }
         task.resume()
+    }
+
+    func syncPlaylists() {
+        if syncingPlaylists {
+            return
+        }
+
+        syncingPlaylists = true
+
+        for playlist in playlists {
+            syncPlaylist(id: String(playlist.id))
+        }
+
+        syncingPlaylists = false
+    }
+
+    func syncPlaylist(id: String, retryCount: Int = 0) {
+        if let url = URL(string: "\(baseUrl)/api/playlists/\(id)/playlist_mp3s.json") {
+            let session = URLSession(configuration: .default)
+            let task = session.dataTask(with: url) { data, _, error in
+                if let error = error {
+                    print("Fetch playlists request failed: \(error), retryCount: \(retryCount)")
+
+                    if retryCount < Constants.maxRetryAttempts {
+                        let delay = Constants.initialDelayInSeconds * Int(pow(2.0, Double(retryCount)))
+                        DispatchQueue.main.asyncAfter(deadline: .now() + Double(delay)) {
+                            self.syncPlaylist(id: id, retryCount: retryCount + 1)
+                        }
+                    } else {
+                        print("Max sync playlist retries reached.")
+                    }
+                    return
+                }
+
+                let decoder = JSONDecoder()
+                if let safeData = data {
+                    do {
+                        let results = try decoder.decode(PlaylistMp3s.self, from: safeData)
+                        DispatchQueue.main.async {
+                            for playlist_mp3 in results.playlist_mp3s {
+                                self.dowloadMp3(mp3: playlist_mp3.mp3)
+                            }
+                        }
+                    } catch {
+                        print(error)
+                    }
+                }
+            }
+            task.resume()
+        }
+    }
+
+    func dowloadMp3(mp3: Mp3, retryCount: Int = 0) {
+        guard let url = URL(string: "\(baseUrl)/api/mp3s/\(mp3.id)/play") else { return }
+
+        let task = URLSession.shared.downloadTask(with: url) { localURL, _, error in
+            if let localURL = localURL {
+                self.saveMP3Locally(originalURL: localURL, mp3: mp3)
+            } else {
+                print("Failed to download mp3: \(error?.localizedDescription ?? "Unknown error"), retries count \(retryCount)")
+
+                if retryCount < Constants.maxRetryAttempts {
+                    let delayInSeconds = pow(Double(Constants.initialDelayInSeconds), Double(retryCount))
+
+                    DispatchQueue.main.asyncAfter(deadline: .now() + delayInSeconds) {
+                        self.dowloadMp3(
+                            mp3: mp3,
+                            retryCount: retryCount + 1
+                        )
+                    }
+                } else {
+                    print("Mp3 download maximum retries reached, giving up.")
+                }
+            }
+        }
+        task.resume()
+    }
+
+    func saveMP3Locally(originalURL: URL, mp3: Mp3, retryCount: Int = 0) {
+        let fileManager = FileManager.default
+        let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+        let destinationURL = documentsDirectory.appendingPathComponent(mp3.nameForFile())
+
+        do {
+            try fileManager.copyItem(at: originalURL, to: destinationURL)
+        } catch {
+            if retryCount < Constants.maxRetryAttempts {
+                let delayInSeconds = pow(Double(Constants.initialDelayInSeconds), Double(retryCount))
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + delayInSeconds) {
+                    self.saveMP3Locally(
+                        originalURL: originalURL,
+                        mp3: mp3,
+                        retryCount: retryCount + 1
+                    )
+                }
+            }
+        }
     }
 }

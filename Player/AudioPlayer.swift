@@ -22,18 +22,13 @@ class AudioPlayer: NSObject, ObservableObject {
     }
 
     func newMp3(mp3: Mp3?) {
-        guard let mp3Id = mp3?.id else {
-            print("New queued mp3 error: MP3 or MP3 ID is nil")
-            return
-        }
-
         if let safeMp3 = mp3 {
             if let localURL = localFileURL(for: safeMp3) {
                 setupPlayer(with: localURL)
             } else {
                 let urlString = "\(networkManager.baseUrl)/api/mp3s/\(safeMp3.id)/play"
 
-                downloadMP3(from: urlString) { [weak self] tempURL in
+                dowloadMp3(from: urlString) { [weak self] tempURL in
                     guard let self = self, let tempURL = tempURL else { return }
 
                     self.saveMP3Locally(originalURL: tempURL, mp3: safeMp3) { localURL in
@@ -43,6 +38,8 @@ class AudioPlayer: NSObject, ObservableObject {
                     }
                 }
             }
+        } else {
+            print("New queued mp3 error: MP3 or MP3 ID is nil")
         }
     }
 
@@ -136,8 +133,6 @@ class AudioPlayer: NSObject, ObservableObject {
             try fileManager.copyItem(at: originalURL, to: destinationURL)
             completion(destinationURL)
         } catch {
-            // print("Could not save file locally: \(error), retry count \(retryCount)")
-
             if retryCount < Constants.maxRetryAttempts {
                 let delayInSeconds = pow(Double(Constants.initialDelayInSeconds), Double(retryCount))
 
@@ -150,13 +145,12 @@ class AudioPlayer: NSObject, ObservableObject {
                     )
                 }
             } else {
-                // print("Local file save maximum retries reached, giving up.")
                 completion(nil)
             }
         }
     }
 
-    func downloadMP3(from urlString: String, retryCount: Int = 0, completion: @escaping (URL?) -> Void) {
+    func dowloadMp3(from urlString: String, retryCount: Int = 0, completion: @escaping (URL?) -> Void) {
         guard let url = URL(string: urlString) else {
             completion(nil)
             return
@@ -172,7 +166,7 @@ class AudioPlayer: NSObject, ObservableObject {
                     let delayInSeconds = pow(Double(Constants.initialDelayInSeconds), Double(retryCount))
 
                     DispatchQueue.main.asyncAfter(deadline: .now() + delayInSeconds) {
-                        self.downloadMP3(
+                        self.dowloadMp3(
                             from: urlString,
                             retryCount: retryCount + 1,
                             completion: completion
