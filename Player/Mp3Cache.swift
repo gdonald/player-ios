@@ -12,7 +12,7 @@ class Mp3Cache: ObservableObject {
             let mp3Files = fileURLs.filter { $0.pathExtension == "mp3" }
 
             cachedMp3s = mp3Files.map { fileURL -> CachedMp3 in
-                CachedMp3(id: Int(fileURL.lastPathComponent.split(separator: "-").first ?? "") ?? 0,
+                CachedMp3(id: Int(fileURL.lastPathComponent.split(separator: ".").first ?? "") ?? 0,
                           fileURL: fileURL)
             }
         } catch {

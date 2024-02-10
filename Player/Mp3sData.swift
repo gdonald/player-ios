@@ -16,13 +16,7 @@ struct Mp3: Identifiable, Decodable {
     let file_hash: String
 
     func nameForFile() -> String {
-        let baseName = title
-            .lowercased()
-            .replacingOccurrences(of: " ", with: "_")
-            .replacingOccurrences(of: "[^-a-zA-Z_]", with: "", options: [.regularExpression])
-            .replacingOccurrences(of: "[_]{2}", with: "_", options: [.regularExpression])
-
-        return "\(id)-\(baseName).mp3"
+        return "\(id).mp3"
     }
 
     func localFileHash() -> String? {
