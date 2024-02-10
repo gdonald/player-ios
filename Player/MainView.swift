@@ -34,8 +34,7 @@ struct MainView: View {
                                 Label("Mp3s", systemImage: "music.note")
                             }
 
-                        CachedMp3sView(mp3Cache: mp3Cache)
-//                            .badge(mp3Cacher.cachedMp3s.count)
+                        CachedMp3sView(mp3Cache: mp3Cache, networkManager: networkManager)
                             .tabItem {
                                 Label("Cache", systemImage: "square.and.arrow.down.on.square")
                             }

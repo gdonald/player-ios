@@ -4,13 +4,15 @@ import SwiftUI
 struct CachedMp3sView: View {
     @ObservedObject var mp3Cache: Mp3Cache
     @State private var searchText: String = UserDefaults.standard.string(forKey: "savedCachedMp3sSearchText") ?? ""
+    let networkManager: NetworkManager
 
     var filteredItems: [CachedMp3] {
         if searchText.isEmpty {
             return mp3Cache.cachedMp3s.sorted { $0.id < $1.id }
         } else {
             return mp3Cache.cachedMp3s.filter {
-                $0.nameForList().localizedCaseInsensitiveContains(searchText)
+                $0.nameForList(networkManager: networkManager)
+                    .localizedCaseInsensitiveContains(searchText)
             }.sorted { $0.id < $1.id }
         }
     }
@@ -43,7 +45,8 @@ struct CachedMp3sView: View {
 
                     List(filteredItems) { cachedMp3 in
                         CachedMp3ListItem(
-                            cachedMp3: cachedMp3
+                            cachedMp3: cachedMp3,
+                            networkManager: networkManager
                         )
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .contentShape(Rectangle())

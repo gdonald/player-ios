@@ -11,10 +11,9 @@ class Mp3Cache: ObservableObject {
             let fileURLs = try fileManager.contentsOfDirectory(at: documentsDirectory, includingPropertiesForKeys: nil)
             let mp3Files = fileURLs.filter { $0.pathExtension == "mp3" }
 
-            var id = 0
             cachedMp3s = mp3Files.map { fileURL -> CachedMp3 in
-                id += 1
-                return CachedMp3(id: id, fileURL: fileURL)
+                CachedMp3(id: Int(fileURL.lastPathComponent.split(separator: "-").first ?? "") ?? 0,
+                          fileURL: fileURL)
             }
         } catch {
             print("Error while enumerating files \(documentsDirectory.path): \(error.localizedDescription)")

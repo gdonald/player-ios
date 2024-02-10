@@ -15,7 +15,7 @@
 		6694816D2B5F209100A32421 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6694816C2B5F209100A32421 /* KeychainHelper.swift */; };
 		66A8DAA12B69591100D76FE8 /* BlueToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A8DAA02B69591100D76FE8 /* BlueToggleStyle.swift */; };
 		66A8DAA32B6EAA3800D76FE8 /* CachedMp3sView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A8DAA22B6EAA3800D76FE8 /* CachedMp3sView.swift */; };
-		66A8DAA52B6EAAC200D76FE8 /* Mp3Cacher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A8DAA42B6EAAC200D76FE8 /* Mp3Cacher.swift */; };
+		66A8DAA52B6EAAC200D76FE8 /* Mp3Cache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A8DAA42B6EAAC200D76FE8 /* Mp3Cache.swift */; };
 		66A8DAA72B6EAB8C00D76FE8 /* CachedMp3Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A8DAA62B6EAB8C00D76FE8 /* CachedMp3Data.swift */; };
 		66A8DAA92B6EB48A00D76FE8 /* CachedMp3ListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A8DAA82B6EB48A00D76FE8 /* CachedMp3ListItem.swift */; };
 		66A8DAAB2B71BAA000D76FE8 /* PlaylistMp3sData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66A8DAAA2B71BAA000D76FE8 /* PlaylistMp3sData.swift */; };
@@ -49,7 +49,7 @@
 		6694816C2B5F209100A32421 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		66A8DAA02B69591100D76FE8 /* BlueToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueToggleStyle.swift; sourceTree = "<group>"; };
 		66A8DAA22B6EAA3800D76FE8 /* CachedMp3sView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedMp3sView.swift; sourceTree = "<group>"; };
-		66A8DAA42B6EAAC200D76FE8 /* Mp3Cacher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mp3Cacher.swift; sourceTree = "<group>"; };
+		66A8DAA42B6EAAC200D76FE8 /* Mp3Cache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mp3Cache.swift; sourceTree = "<group>"; };
 		66A8DAA62B6EAB8C00D76FE8 /* CachedMp3Data.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedMp3Data.swift; sourceTree = "<group>"; };
 		66A8DAA82B6EB48A00D76FE8 /* CachedMp3ListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedMp3ListItem.swift; sourceTree = "<group>"; };
 		66A8DAAA2B71BAA000D76FE8 /* PlaylistMp3sData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistMp3sData.swift; sourceTree = "<group>"; };
@@ -115,7 +115,7 @@
 				6674E3272B5F2EE600C344BE /* LogoutView.swift */,
 				66B6F44F2B5C71620017C5F5 /* MainCountsData.swift */,
 				66DCBCF32B58B7A300793522 /* MainView.swift */,
-				66A8DAA42B6EAAC200D76FE8 /* Mp3Cacher.swift */,
+				66A8DAA42B6EAAC200D76FE8 /* Mp3Cache.swift */,
 				66F6C2192B5BEB8900DC43FF /* Mp3ListItem.swift */,
 				66F6C2152B5B4FA300DC43FF /* Mp3sData.swift */,
 				66DCBD1B2B58B96D00793522 /* Mp3sView.swift */,
@@ -225,7 +225,7 @@
 				66DCBCF42B58B7A300793522 /* MainView.swift in Sources */,
 				66A8DAA32B6EAA3800D76FE8 /* CachedMp3sView.swift in Sources */,
 				66B6F4562B5CB0540017C5F5 /* QueuedMp3sData.swift in Sources */,
-				66A8DAA52B6EAAC200D76FE8 /* Mp3Cacher.swift in Sources */,
+				66A8DAA52B6EAAC200D76FE8 /* Mp3Cache.swift in Sources */,
 				66F6C21A2B5BEB8900DC43FF /* Mp3ListItem.swift in Sources */,
 				66DCBD1E2B58BACB00793522 /* PlaylistsView.swift in Sources */,
 				66DCBD202B58BB0C00793522 /* QueuedMp3sView.swift in Sources */,
