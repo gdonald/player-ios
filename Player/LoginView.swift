@@ -158,7 +158,7 @@ struct LoginView: View {
                         }
                     }
 
-                Toggle("Remember Login", isOn: $saveLogin)
+                Toggle("Remember", isOn: $saveLogin)
                     .toggleStyle(BlueToggleStyle())
                     .padding()
                     .onAppear {
