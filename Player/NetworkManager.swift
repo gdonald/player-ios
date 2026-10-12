@@ -6,19 +6,43 @@ class NetworkManager: ObservableObject {
     @Published var mainCounts = MainCounts(mp3s_count: 0, playlists_count: 0, queued_mp3s_count: 0, sources_count: 0)
     @Published var mp3s = [Mp3]()
     @Published var playlists = [Playlist]()
-    @Published var queuedMp3s = [QueuedMp3]()
+    @Published var queuedMp3s = [QueuedMp3]() {
+        didSet {
+            if currentMp3 == nil {
+                currentMp3 = queuedMp3s.first
+            }
+        }
+    }
+
     @Published var currentMp3: QueuedMp3?
     @Published var syncingPlaylists: Bool = false
 
     init() {
+        loadBaseUrl()
+    }
+
+    func loadBaseUrl() {
         if let receivedData = KeychainHelper.load(key: "baseUrl"),
            let value = String(data: receivedData, encoding: .utf8)
         {
-            self.baseUrl = value
+            baseUrl = value
         }
     }
 
+    func authorizedRequest(url: URL) -> URLRequest {
+        var request = URLRequest(url: url)
+
+        if let receivedData = KeychainHelper.load(key: "sessionCookie"),
+           let value = String(data: receivedData, encoding: .utf8)
+        {
+            request.setValue("_player_session=\(value)", forHTTPHeaderField: "Cookie")
+        }
+
+        return request
+    }
+
     func fetch() {
+        loadBaseUrl()
         fetchMp3s()
         fetchPlaylists()
         fetchQueuedMp3s()
@@ -27,7 +51,7 @@ class NetworkManager: ObservableObject {
     func fetchMp3s(retryCount: Int = 0) {
         if let url = URL(string: "\(baseUrl)/api/mp3s.json") {
             let session = URLSession(configuration: .default)
-            let task = session.dataTask(with: url) { data, _, error in
+            let task = session.dataTask(with: authorizedRequest(url: url)) { data, _, error in
                 if let error = error {
                     print("Fetch Mp3s request failed: \(error), retryCount: \(retryCount)")
 
@@ -61,7 +85,7 @@ class NetworkManager: ObservableObject {
     func fetchQueuedMp3s(retryCount: Int = 0) {
         if let url = URL(string: "\(baseUrl)/api/queued_mp3s.json") {
             let session = URLSession(configuration: .default)
-            let task = session.dataTask(with: url) { data, _, error in
+            let task = session.dataTask(with: authorizedRequest(url: url)) { data, _, error in
                 if let error = error {
                     print("Fetch queued mp3s request failed: \(error), retryCount: \(retryCount)")
 
@@ -96,7 +120,7 @@ class NetworkManager: ObservableObject {
     func fetchPlaylists(retryCount: Int = 0) {
         if let url = URL(string: "\(baseUrl)/api/playlists.json") {
             let session = URLSession(configuration: .default)
-            let task = session.dataTask(with: url) { data, _, error in
+            let task = session.dataTask(with: authorizedRequest(url: url)) { data, _, error in
                 if let error = error {
                     print("Fetch playlists request failed: \(error), retryCount: \(retryCount)")
 
@@ -143,7 +167,7 @@ class NetworkManager: ObservableObject {
         }
 
         if let url = URL(string: "\(baseUrl)/api/queued_mp3s/\(mp3ToDequeue?.id ?? 0).json") {
-            var request = URLRequest(url: url)
+            var request = authorizedRequest(url: url)
             request.httpMethod = "DELETE"
 
             let session = URLSession(configuration: .default)
@@ -186,7 +210,7 @@ class NetworkManager: ObservableObject {
     func createQueuedMp3(mp3Id: String, retryCount: Int = 0) {
         guard let url = URL(string: "\(baseUrl)/api/queued_mp3s") else { return }
 
-        var request = URLRequest(url: url)
+        var request = authorizedRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
 
@@ -239,7 +263,7 @@ class NetworkManager: ObservableObject {
     func createQueuedMp3sFromPlaylist(playlistId: String, retryCount: Int = 0) {
         guard let url = URL(string: "\(baseUrl)/api/playlists/\(playlistId)/enqueue") else { return }
 
-        var request = URLRequest(url: url)
+        var request = authorizedRequest(url: url)
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
 
@@ -288,7 +312,7 @@ class NetworkManager: ObservableObject {
     func deleteQueuedMp3(queuedMp3Id: String, retryCount: Int = 0) {
         guard let url = URL(string: "\(baseUrl)/api/queued_mp3s/\(queuedMp3Id)") else { return }
 
-        var request = URLRequest(url: url)
+        var request = authorizedRequest(url: url)
         request.httpMethod = "DELETE"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
 
@@ -363,7 +387,7 @@ class NetworkManager: ObservableObject {
     func syncPlaylist(id: String, retryCount: Int = 0) {
         if let url = URL(string: "\(baseUrl)/api/playlists/\(id)/playlist_mp3s.json") {
             let session = URLSession(configuration: .default)
-            let task = session.dataTask(with: url) { data, _, error in
+            let task = session.dataTask(with: authorizedRequest(url: url)) { data, _, error in
                 if let error = error {
                     print("Fetch playlists request failed: \(error), retryCount: \(retryCount)")
 
@@ -399,7 +423,7 @@ class NetworkManager: ObservableObject {
     func dowloadMp3(mp3: Mp3, retryCount: Int = 0) {
         guard let url = URL(string: "\(baseUrl)/api/mp3s/\(mp3.id)/play") else { return }
 
-        let task = URLSession.shared.downloadTask(with: url) { localURL, _, error in
+        let task = URLSession.shared.downloadTask(with: authorizedRequest(url: url)) { localURL, _, error in
             if let localURL = localURL {
                 self.saveMP3Locally(originalURL: localURL, mp3: mp3)
             } else {

@@ -3,7 +3,8 @@ import SwiftUI
 
 struct LoginView: View {
     @EnvironmentObject var userAuth: UserAuth
-    @State private var baseUrl: String = ""
+    @EnvironmentObject var themeStore: ThemeStore
+    @State private var baseUrl: String = "https://player.gregdonald.com"
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var saveLogin: Bool = false
@@ -107,86 +108,74 @@ struct LoginView: View {
         }
     }
 
-    var body: some View {
-        NavigationView {
-            VStack {
-                Text("Base URL").font(.title)
-
-                TextField("", text: $baseUrl)
-                    .autocapitalization(.none)
-                    .padding(10)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color.gray, lineWidth: 1)
-                    ).padding(.bottom, 30)
-                    .onAppear {
-                        if let receivedData = KeychainHelper.load(key: "baseUrl"),
-                           let value = String(data: receivedData, encoding: .utf8)
-                        {
-                            baseUrl = value
-                        }
-                    }
-
-                Text("Login").font(.title)
-
-                TextField("Username", text: $username)
-                    .autocapitalization(.none)
-                    .padding(10)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color.gray, lineWidth: 1)
-                    )
-                    .onAppear {
-                        if let receivedData = KeychainHelper.load(key: "username"),
-                           let value = String(data: receivedData, encoding: .utf8)
-                        {
-                            username = value
-                        }
-                    }
-
-                SecureField("Password", text: $password)
-                    .padding(10)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color.gray, lineWidth: 1)
-                    )
-                    .onAppear {
-                        if let receivedData = KeychainHelper.load(key: "password"),
-                           let value = String(data: receivedData, encoding: .utf8)
-                        {
-                            password = value
-                        }
-                    }
-
-                Toggle("Remember", isOn: $saveLogin)
-                    .toggleStyle(BlueToggleStyle())
-                    .padding()
-                    .onAppear {
-                        let receivedData = KeychainHelper.loadBoolean(key: "saveLogin") ?? false
-                        saveLogin = receivedData
-                    }
-
-                Button(action: {
-                    storeLogin(saveLogin: saveLogin, username: username, password: password, baseUrl: baseUrl)
-                    authenticateUser(username: username, password: password)
-                }) {
-                    Text("Login")
-                        .foregroundColor(.black)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
-                }
-                .background(RoundedRectangle(cornerRadius: 7)
-                    .fill(Color.gray))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 7)
-                        .stroke(Color.gray, lineWidth: 1)
-                )
-            }
-            .padding(50)
+    func loadStoredLogin() {
+        if let receivedData = KeychainHelper.load(key: "baseUrl"),
+           let value = String(data: receivedData, encoding: .utf8),
+           !value.isEmpty
+        {
+            baseUrl = value
         }
+
+        if let receivedData = KeychainHelper.load(key: "username"),
+           let value = String(data: receivedData, encoding: .utf8)
+        {
+            username = value
+        }
+
+        if let receivedData = KeychainHelper.load(key: "password"),
+           let value = String(data: receivedData, encoding: .utf8)
+        {
+            password = value
+        }
+
+        saveLogin = KeychainHelper.loadBoolean(key: "saveLogin") ?? false
+    }
+
+    var body: some View {
+        let theme = themeStore.theme
+
+        ScrollView {
+            WinampWindow(theme: theme, title: "Login") {
+                VStack(alignment: .leading, spacing: 10) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        FormLabel(theme: theme, text: "Base URL")
+                        LCDField(theme: theme, prompt: "https://", text: $baseUrl)
+                            .keyboardType(.URL)
+                    }
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        FormLabel(theme: theme, text: "Username")
+                        LCDField(theme: theme, prompt: "Username", text: $username)
+                    }
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        FormLabel(theme: theme, text: "Password")
+                        LCDField(theme: theme, prompt: "Password", text: $password, secure: true)
+                    }
+
+                    HStack {
+                        Toggle("Remember", isOn: $saveLogin)
+                            .toggleStyle(WinampToggleStyle(theme: theme))
+
+                        Spacer()
+
+                        Button("Login") {
+                            storeLogin(saveLogin: saveLogin, username: username, password: password, baseUrl: baseUrl)
+                            authenticateUser(username: username, password: password)
+                        }
+                        .buttonStyle(BevelButtonStyle(theme: theme))
+                    }
+                }
+            }
+            .padding(6)
+            .padding(.top, 40)
+        }
+        .onAppear(perform: loadStoredLogin)
     }
 }
 
 #Preview {
     LoginView()
+        .environmentObject(UserAuth())
+        .environmentObject(ThemeStore())
 }

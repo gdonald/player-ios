@@ -26,6 +26,7 @@ class AudioPlayer: NSObject, ObservableObject {
             if let localURL = localFileURL(for: safeMp3) {
                 setupPlayer(with: localURL)
             } else {
+                networkManager.loadBaseUrl()
                 let urlString = "\(networkManager.baseUrl)/api/mp3s/\(safeMp3.id)/play"
 
                 dowloadMp3(from: urlString) { [weak self] tempURL in
@@ -156,7 +157,7 @@ class AudioPlayer: NSObject, ObservableObject {
             return
         }
 
-        let task = URLSession.shared.downloadTask(with: url) { localURL, _, error in
+        let task = URLSession.shared.downloadTask(with: networkManager.authorizedRequest(url: url)) { localURL, _, error in
             if let localURL = localURL {
                 completion(localURL)
             } else {

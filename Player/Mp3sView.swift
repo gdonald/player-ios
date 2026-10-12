@@ -2,10 +2,10 @@
 import SwiftUI
 
 struct Mp3sView: View {
+    @EnvironmentObject var themeStore: ThemeStore
     @ObservedObject var networkManager: NetworkManager
     @State private var searchText: String = UserDefaults.standard.string(forKey: "savedMp3sSearchText") ?? ""
-    @State private var showMessage = false
-    @State private var message = ""
+    @State private var message: String?
 
     var filteredItems: [Mp3] {
         if searchText.isEmpty {
@@ -20,44 +20,49 @@ struct Mp3sView: View {
     }
 
     var body: some View {
-        NavigationView {
-            ZStack {
-                VStack {
-                    List(filteredItems) { mp3 in
-                        Mp3ListItem(mp3: mp3)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .contentShape(Rectangle())
-                            .listRowInsets(EdgeInsets())
-                            .onTapGesture {
-                                self.message = "\"\(mp3.title)\"\nadded to queue"
-                                self.showMessage = true
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                    self.showMessage = false
-                                }
-                                DispatchQueue.main.async {
-                                    networkManager.createQueuedMp3(mp3Id: String(mp3.id))
-                                }
-                            }
-                    }
-                    .searchable(text: $searchText)
-                    .onChange(of: searchText) { _, newValue in
-                        UserDefaults.standard.set(newValue, forKey: "savedMp3sSearchText")
-                    }
-                }
+        let theme = themeStore.theme
 
-                if showMessage {
-                    Text(message)
-                        .padding(20)
-                        .background(Color.black.opacity(0.85))
-                        .foregroundColor(Color.white)
-                        .cornerRadius(10)
-                        .transition(.opacity)
-                        .animation(.easeInOut, value: showMessage)
-                        .zIndex(1)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        WinampWindow(theme: theme, title: "Mp3s") {
+            VStack(spacing: 4) {
+                LCDField(theme: theme, prompt: "Search", text: $searchText)
+
+                VStack(spacing: 0) {
+                    ColumnHeaders(theme: theme, columns: [("Title", nil), ("Artist", 130)])
+
+                    ScrollView {
+                        LazyVStack(spacing: 0) {
+                            ForEach(filteredItems) { mp3 in
+                                Mp3ListItem(theme: theme, mp3: mp3)
+                                    .contentShape(Rectangle())
+                                    .onTapGesture {
+                                        enqueue(mp3)
+                                    }
+                            }
+                        }
+                    }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .lcdPanel(theme, background: theme.listBackground)
             }
+        }
+        .frame(maxHeight: .infinity)
+        .onChange(of: searchText) { _, newValue in
+            UserDefaults.standard.set(newValue, forKey: "savedMp3sSearchText")
+        }
+        .overlay(Toast(theme: theme, message: message))
+        .animation(.easeInOut, value: message)
+    }
+
+    private func enqueue(_ mp3: Mp3) {
+        flash("\"\(mp3.title)\"\nadded to queue")
+        networkManager.createQueuedMp3(mp3Id: String(mp3.id))
+    }
+
+    private func flash(_ text: String) {
+        message = text
+        Task {
+            try? await Task.sleep(for: .seconds(2))
+            message = nil
         }
     }
 }

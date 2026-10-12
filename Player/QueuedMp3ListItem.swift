@@ -2,31 +2,30 @@
 import SwiftUI
 
 struct QueuedMp3ListItem: View {
+    let theme: Theme
+    let number: Int
     let queuedMp3: QueuedMp3
-    let currentMp3: QueuedMp3?
+    let isCurrent: Bool
 
     var body: some View {
-        HStack(spacing: 0) {
-            Image(systemName: "trash")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 15, height: 15)
-                .padding(5)
+        let color = isCurrent ? theme.listCurrent : theme.listText
 
-            Text(queuedMp3.mp3.title)
-                .font(.system(size: 17))
+        HStack(spacing: 6) {
+            Text("\(number). \(queuedMp3.mp3.artist_name) - \(queuedMp3.mp3.title)")
+                .font(Theme.text(13, weight: isCurrent ? .bold : .regular, relativeTo: .body))
+                .foregroundStyle(color)
+                .lineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(5).padding(.leading, 6)
 
-            Spacer()
+            Text(formatTime(queuedMp3.mp3.length))
+                .font(Theme.text(13, relativeTo: .body))
+                .foregroundStyle(color)
 
-            if queuedMp3 == currentMp3 {
-                Image(systemName: "arrow.left")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 15, height: 15)
-                    .padding(5).padding(.trailing, 6)
-            }
-        }.padding(5)
+            Image(systemName: "xmark")
+                .font(.system(size: 9, weight: .bold))
+                .foregroundStyle(theme.displayDim)
+        }
+        .padding(.horizontal, 6)
+        .padding(.vertical, 5)
     }
 }

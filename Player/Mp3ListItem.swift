@@ -2,20 +2,25 @@
 import SwiftUI
 
 struct Mp3ListItem: View {
-    var mp3: Mp3
+    let theme: Theme
+    let mp3: Mp3
 
     var body: some View {
-        VStack(spacing: 0) {
+        HStack(spacing: 0) {
             Text(mp3.title)
-                .font(.system(size: 17))
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                .padding(5).padding(.leading, 6)
+                .font(Theme.text(13, relativeTo: .body))
+                .foregroundStyle(theme.listText)
+                .lineLimit(1)
+                .frame(maxWidth: .infinity, alignment: .leading)
 
             Text(mp3.artist_name)
-                .font(.system(size: 13))
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                .padding(5).padding(.leading, 6)
+                .font(Theme.text(13, relativeTo: .body))
+                .foregroundStyle(theme.listText)
+                .lineLimit(1)
+                .frame(width: 130, alignment: .leading)
         }
-        .padding(5)
+        .padding(.horizontal, 6)
+        .padding(.vertical, 6)
+        .listRowLine(theme)
     }
 }

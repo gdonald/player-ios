@@ -2,21 +2,24 @@
 import SwiftUI
 
 struct PlaylistListItem: View {
-    var playlist: Playlist
+    let theme: Theme
+    let playlist: Playlist
 
     var body: some View {
         HStack(spacing: 0) {
             Text(playlist.name)
-                .font(.system(size: 17))
+                .font(Theme.text(13, relativeTo: .body))
+                .foregroundStyle(theme.listText)
+                .lineLimit(1)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(5).padding(.leading, 6)
-
-            Spacer()
 
             Text(String(playlist.mp3s_count))
-                .font(.system(size: 17))
-                .frame(alignment: .trailing)
-                .padding(5).padding(.trailing, 6)
-        }.padding(5)
+                .font(Theme.digits(13, relativeTo: .body))
+                .foregroundStyle(theme.listText)
+                .frame(width: 60, alignment: .leading)
+        }
+        .padding(.horizontal, 6)
+        .padding(.vertical, 6)
+        .listRowLine(theme)
     }
 }

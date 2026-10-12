@@ -3,6 +3,7 @@ import SwiftUI
 
 struct LogoutView: View {
     @EnvironmentObject var userAuth: UserAuth
+    @EnvironmentObject var themeStore: ThemeStore
 
     func logoutAction() {
         DispatchQueue.main.async {
@@ -17,24 +18,34 @@ struct LogoutView: View {
     }
 
     var body: some View {
+        let theme = themeStore.theme
+
         VStack {
-            Text("Are you sure?").padding().font(.title)
-            Button(action: self.logoutAction) {
-                Text("Logout")
-                    .foregroundColor(.black)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
+            WinampWindow(theme: theme, title: "Logout") {
+                VStack(spacing: 10) {
+                    Text("Are you sure?")
+                        .font(Theme.text(13, relativeTo: .body))
+                        .foregroundStyle(theme.display)
+                        .frame(maxWidth: .infinity)
+                        .padding(10)
+                        .lcdPanel(theme)
+
+                    HStack {
+                        Spacer()
+
+                        Button("Logout", action: logoutAction)
+                            .buttonStyle(BevelButtonStyle(theme: theme))
+                    }
+                }
             }
-            .background(RoundedRectangle(cornerRadius: 7)
-                .fill(Color.gray))
-            .overlay(
-                RoundedRectangle(cornerRadius: 7)
-                    .stroke(Color.gray, lineWidth: 1)
-            )
+
+            Spacer()
         }
     }
 }
 
 #Preview {
     LogoutView()
+        .environmentObject(UserAuth())
+        .environmentObject(ThemeStore())
 }

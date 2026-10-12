@@ -2,10 +2,10 @@
 import SwiftUI
 
 struct PlaylistsView: View {
+    @EnvironmentObject var themeStore: ThemeStore
     @ObservedObject var networkManager: NetworkManager
     @State private var searchText: String = UserDefaults.standard.string(forKey: "savedPlaylistsSearchText") ?? ""
-    @State private var showMessage = false
-    @State private var message = ""
+    @State private var message: String?
 
     var filteredItems: [Playlist] {
         if searchText.isEmpty {
@@ -18,44 +18,49 @@ struct PlaylistsView: View {
     }
 
     var body: some View {
-        NavigationView {
-            ZStack {
-                VStack {
-                    List(filteredItems) { playlist in
-                        PlaylistListItem(playlist: playlist)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .contentShape(Rectangle())
-                            .listRowInsets(EdgeInsets())
-                            .onTapGesture {
-                                self.message = "\"\(playlist.name)\"\nadded to queue"
-                                self.showMessage = true
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                    self.showMessage = false
-                                }
-                                DispatchQueue.main.async {
-                                    networkManager.createQueuedMp3sFromPlaylist(playlistId: String(playlist.id))
-                                }
-                            }
-                    }
-                    .searchable(text: $searchText)
-                    .onChange(of: searchText) { _, newValue in
-                        UserDefaults.standard.set(newValue, forKey: "savedPlaylistsSearchText")
-                    }
-                }
+        let theme = themeStore.theme
 
-                if showMessage {
-                    Text(message)
-                        .padding(20)
-                        .background(Color.black.opacity(0.85))
-                        .foregroundColor(Color.white)
-                        .cornerRadius(10)
-                        .transition(.opacity)
-                        .animation(.easeInOut, value: showMessage)
-                        .zIndex(1)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+        WinampWindow(theme: theme, title: "Playlists") {
+            VStack(spacing: 4) {
+                LCDField(theme: theme, prompt: "Search", text: $searchText)
+
+                VStack(spacing: 0) {
+                    ColumnHeaders(theme: theme, columns: [("Name", nil), ("Mp3s", 60)])
+
+                    ScrollView {
+                        LazyVStack(spacing: 0) {
+                            ForEach(filteredItems) { playlist in
+                                PlaylistListItem(theme: theme, playlist: playlist)
+                                    .contentShape(Rectangle())
+                                    .onTapGesture {
+                                        enqueue(playlist)
+                                    }
+                            }
+                        }
+                    }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .lcdPanel(theme, background: theme.listBackground)
             }
+        }
+        .frame(maxHeight: .infinity)
+        .onChange(of: searchText) { _, newValue in
+            UserDefaults.standard.set(newValue, forKey: "savedPlaylistsSearchText")
+        }
+        .overlay(Toast(theme: theme, message: message))
+        .animation(.easeInOut, value: message)
+    }
+
+    private func enqueue(_ playlist: Playlist) {
+        flash("\"\(playlist.name)\"\nadded to queue")
+        networkManager.createQueuedMp3sFromPlaylist(playlistId: String(playlist.id))
+    }
+
+    private func flash(_ text: String) {
+        message = text
+        Task {
+            try? await Task.sleep(for: .seconds(2))
+            message = nil
         }
     }
 }

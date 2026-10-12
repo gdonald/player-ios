@@ -2,124 +2,179 @@
 import SwiftUI
 
 struct QueuedMp3sView: View {
-    @EnvironmentObject var userAuth: UserAuth
-    @StateObject private var audioPlayer = AudioPlayer()
+    @EnvironmentObject var themeStore: ThemeStore
     @ObservedObject var networkManager: NetworkManager
+    @ObservedObject var audioPlayer: AudioPlayer
     @State private var searchText: String = UserDefaults.standard.string(forKey: "savedQueuedMp3sSearchText") ?? ""
-    @State private var justStarted: Bool = true
-    @State private var showMessage = false
-    @State private var message = ""
+    @State private var message: String?
 
-    var filteredItems: [QueuedMp3] {
+    private var sortedQueue: [QueuedMp3] {
+        networkManager.queuedMp3s.sorted { $0.position < $1.position }
+    }
+
+    private var numberedItems: [(number: Int, queuedMp3: QueuedMp3)] {
+        let numbered = sortedQueue.enumerated().map { (number: $0.offset + 1, queuedMp3: $0.element) }
+
         if searchText.isEmpty {
-            return networkManager.queuedMp3s.sorted { $0.position < $1.position }
-        } else {
-            return networkManager.queuedMp3s.filter {
-                $0.mp3.title.localizedCaseInsensitiveContains(searchText)
-                    ||
-                    $0.mp3.artist_name.localizedCaseInsensitiveContains(searchText)
-            }.sorted { $0.position < $1.position }
+            return numbered
+        }
+
+        return numbered.filter {
+            $0.queuedMp3.mp3.title.localizedCaseInsensitiveContains(searchText)
+                || $0.queuedMp3.mp3.artist_name.localizedCaseInsensitiveContains(searchText)
         }
     }
 
-    func playNextQueuedMp3IfAvailable() {
-        if justStarted && !networkManager.queuedMp3s.isEmpty && !audioPlayer.isPlaying {
-            if let mp3 = networkManager.queuedMp3s.first?.mp3 {
-                audioPlayer.newMp3(mp3: mp3)
-            }
-        }
+    private var currentNumber: Int? {
+        sortedQueue.firstIndex { $0 == networkManager.currentMp3 }.map { $0 + 1 }
+    }
+
+    private var totalLength: Int {
+        networkManager.queuedMp3s.reduce(0) { $0 + $1.mp3.length }
+    }
+
+    private var marqueeText: String {
+        guard let current = networkManager.currentMp3?.mp3 else { return "Nothing queued" }
+
+        return "\(currentNumber ?? 0). \(current.artist_name) - \(current.title) (\(formatTime(current.length)))"
     }
 
     var body: some View {
-        NavigationView {
-            ZStack {
-                VStack {
-                    List(filteredItems) { queuedMp3 in
-                        QueuedMp3ListItem(
-                            queuedMp3: queuedMp3,
-                            currentMp3: networkManager.currentMp3 ?? nil
-                        )
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .contentShape(Rectangle())
-                        .listRowInsets(EdgeInsets())
-                        .onTapGesture {
-                            self.message = "\"\(queuedMp3.mp3.title)\"\n removed from queue"
-                            self.showMessage = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                                self.showMessage = false
+        let theme = themeStore.theme
+        let current = networkManager.currentMp3?.mp3
+
+        VStack(spacing: 6) {
+            WinampWindow(theme: theme, title: "Player") {
+                ThemePicker(networkManager: networkManager)
+            } content: {
+                VStack(spacing: 6) {
+                    HStack(spacing: 6) {
+                        HStack(spacing: 6) {
+                            Image(systemName: audioPlayer.isPlaying ? "play.fill" : "pause.fill")
+                                .font(.system(size: 10))
+                                .foregroundStyle(theme.display)
+
+                            Text(formatTime(Int(audioPlayer.currentTime)))
+                                .font(Theme.digits(28, relativeTo: .title))
+                                .foregroundStyle(theme.display)
+                        }
+                        .padding(.horizontal, 8)
+                        .frame(height: 48)
+                        .lcdPanel(theme)
+
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(marqueeText)
+                                .font(Theme.text(11, relativeTo: .caption))
+                                .foregroundStyle(theme.display)
+                                .lineLimit(2)
+                                .fixedSize(horizontal: false, vertical: true)
+
+                            HStack {
+                                Text(current?.album_name ?? "")
+                                    .font(Theme.text(10, relativeTo: .caption2))
+                                    .foregroundStyle(theme.displayDim)
+                                    .lineLimit(1)
+
+                                Spacer()
+
+                                Text(formatTime(current?.length ?? 0))
+                                    .font(Theme.digits(11, relativeTo: .caption2))
+                                    .foregroundStyle(theme.display)
                             }
-                            DispatchQueue.main.async {
-                                networkManager.deleteQueuedMp3(queuedMp3Id: String(queuedMp3.id))
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 6)
+                        .frame(maxWidth: .infinity, minHeight: 48, alignment: .leading)
+                        .lcdPanel(theme)
+                    }
+
+                    SeekBar(theme: theme, value: audioPlayer.currentTime, upperBound: Double(current?.length ?? 0)) { seconds in
+                        audioPlayer.seek(to: seconds)
+                    }
+
+                    HStack(spacing: 4) {
+                        Button {
+                            if current != nil {
+                                audioPlayer.playPause()
+                            }
+                        } label: {
+                            Image(systemName: audioPlayer.isPlaying ? "pause.fill" : "play.fill")
+                                .frame(width: 20)
+                        }
+                        .buttonStyle(BevelButtonStyle(theme: theme))
+                        .accessibilityLabel(audioPlayer.isPlaying ? "Pause" : "Play")
+
+                        Button {
+                            networkManager.nextQueuedMp3()
+                        } label: {
+                            Image(systemName: "forward.end.fill")
+                                .frame(width: 20)
+                        }
+                        .buttonStyle(BevelButtonStyle(theme: theme))
+                        .accessibilityLabel("Next")
+
+                        Spacer()
+                    }
+                }
+            }
+
+            WinampWindow(theme: theme, title: "Playlist") {
+                VStack(spacing: 4) {
+                    LCDField(theme: theme, prompt: "Search", text: $searchText)
+
+                    ScrollView {
+                        LazyVStack(spacing: 0) {
+                            ForEach(numberedItems, id: \.queuedMp3.id) { item in
+                                QueuedMp3ListItem(
+                                    theme: theme,
+                                    number: item.number,
+                                    queuedMp3: item.queuedMp3,
+                                    isCurrent: item.number == currentNumber
+                                )
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    remove(item.queuedMp3)
+                                }
                             }
                         }
                     }
-                    .searchable(text: $searchText)
-                    .onChange(of: searchText) { _, newValue in
-                        UserDefaults.standard.set(newValue, forKey: "savedQueuedMp3sSearchText")
-                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .lcdPanel(theme, background: theme.listBackground)
                     .refreshable {
                         networkManager.fetchQueuedMp3s()
                     }
-                    .onAppear {
-                        if userAuth.isAuthenticated {
-                            if !self.audioPlayer.isPlaying {
-                                if let mp3 = networkManager.currentMp3?.mp3 {
-                                    self.audioPlayer.newMp3(mp3: mp3)
-                                }
-                            }
 
-                            justStarted = false
-                        }
-                    }
+                    HStack {
+                        Spacer()
 
-                    VStack {
-                        Button(action: {
-                            if networkManager.currentMp3 != nil {
-                                self.audioPlayer.playPause()
-                            }
-                        }) {
-                            Image(systemName: self.audioPlayer.isPlaying ? "pause.circle" : "play.circle")
-                                .resizable()
-                                .frame(width: 50, height: 50)
-                        }
-                        Slider(
-                            value: Binding(
-                                get: { self.audioPlayer.currentTime },
-                                set: { newTime in self.audioPlayer.seek(to: newTime) }
-                            ),
-                            in: 0 ... Double(networkManager.currentMp3?.mp3.length ?? 0)
-                        )
-                        Text("\(formatTime(Int(self.audioPlayer.currentTime))) / \(formatTime(networkManager.currentMp3?.mp3.length ?? 0))")
+                        Text(formatTime(totalLength))
+                            .font(Theme.digits(11, relativeTo: .caption2))
+                            .foregroundStyle(theme.display)
+                            .padding(.horizontal, 6)
+                            .padding(.vertical, 3)
+                            .lcdPanel(theme)
                     }
-                    .padding(.horizontal, 30).padding(.vertical, 10)
-                    .onChange(of: networkManager.currentMp3) {
-                        if let mp3 = networkManager.currentMp3?.mp3 {
-                            self.audioPlayer.newMp3(mp3: mp3)
-                        }
-                    }
-                    .onChange(of: audioPlayer.ended) {
-                        if audioPlayer.ended {
-                            self.networkManager.nextQueuedMp3()
-                        }
-                    }
-                    .onChange(of: networkManager.queuedMp3s) {
-                        self.playNextQueuedMp3IfAvailable()
-                    }
-                }
-
-                if showMessage {
-                    Text(message)
-                        .padding(20)
-                        .background(Color.black.opacity(0.85))
-                        .foregroundColor(Color.white)
-                        .cornerRadius(10)
-                        .transition(.opacity)
-                        .animation(.easeInOut, value: showMessage)
-                        .zIndex(1)
-                        .multilineTextAlignment(.center)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 }
             }
+            .frame(maxHeight: .infinity)
+        }
+        .onChange(of: searchText) { _, newValue in
+            UserDefaults.standard.set(newValue, forKey: "savedQueuedMp3sSearchText")
+        }
+        .overlay(Toast(theme: theme, message: message))
+        .animation(.easeInOut, value: message)
+    }
+
+    private func remove(_ queuedMp3: QueuedMp3) {
+        flash("\"\(queuedMp3.mp3.title)\"\nremoved from queue")
+        networkManager.deleteQueuedMp3(queuedMp3Id: String(queuedMp3.id))
+    }
+
+    private func flash(_ text: String) {
+        message = text
+        Task {
+            try? await Task.sleep(for: .seconds(2))
+            message = nil
         }
     }
 }
